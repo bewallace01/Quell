@@ -88,9 +88,9 @@ quellAlert     #D4928A   attention without alarm (same as Ember)
 
 ### Typography
 
-- **Display** (presence moments, short evocative phrases): a gentle serif. Candidates: Tiempos Text, GT Alpina, Söhne Mono. Light weight, large size, generous line height.
-- **UI** (buttons, labels, nav): a soft sans-serif. Candidates: Inter, General Sans, Söhne. Regular/Medium weight.
-- **Body** (longer reading): Inter Regular. Line height 1.6+.
+- **Display** (presence moments, short evocative phrases): Fraunces (Google Fonts, free, variable weights). Light weight, large size, generous line height.
+- **UI** (buttons, labels, nav): Geist (Google Fonts, free, variable weights). Regular/Medium weight.
+- **Body** (longer reading): Geist (same as UI for consistency). Line height 1.6+.
 
 When in doubt: smaller and lighter. The brand never shouts.
 

@@ -35,7 +35,6 @@ Next concrete action: Create the `Quell/DesignSystem/` group and start with `Que
 Things we have not decided yet but will need to soon. Each has a "decide by" phase.
 
 - **App icon design.** Decide by Phase 12. Direction: a single soft wave curve or glowing circle on dark background. Abstract. Inconspicuous.
-- **Display font license.** Decide by Phase 1. Tiempos Text and GT Alpina are paid; need to verify license cost or pick a free alternative (e.g., a system serif or Google Fonts option like Fraunces).
 - **Bundle identifier.** Decide at Phase 0 setup. Suggested: `com.lightspacelabs.quell`
 - **App Store name reservation.** Decide before Phase 12. Confirm Quell is available in App Store Connect (requires Apple Developer account).
 - **Clinical advisor.** Decide by Phase 12. Outreach can begin earlier; ideally have someone signed before TestFlight.
@@ -63,6 +62,7 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 
 Most recent first. Move to the brief's Decisions Log when stable.
 
+- Display font: Fraunces. UI/body font: Geist. Both Google Fonts, both free, both variable.
 - Confirmed iOS 17.0 minimum target (locked in at Xcode project creation).
 - Confirmed bundle ID: `com.lightspacelabs.quell` (locked in at Xcode project creation).
 
