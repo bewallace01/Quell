@@ -8,26 +8,27 @@
 
 **Phase 0: Foundation**
 
-We have not started coding yet. This is the pre-flight state.
+Slices 0.1 (pre-flight setup) and 0.2 (Xcode project creation) are complete. Now actively in Slice 0.3 (design token system).
 
 ## Last Session Summary
 
-No sessions yet. Project brief and task list just created.
+Pre-flight work done outside of Claude sessions: Xcode installed, Apple ID signed in, GitHub repo set up, Xcode project created at `Quell/Quell.xcodeproj`, `.gitignore` in place, initial commits pushed. Planning files (`QUELL_PROJECT_BRIEF.md`, `MEMORY.md`, `TASKS.md`) live at project root.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice:** None yet. Next slice will be **Phase 0, Slice 1: Xcode project setup + design tokens file.**
+**Slice 0.3: Design token system.** Build out `Quell/DesignSystem/` with `QuellColors.swift`, `QuellTypography.swift`, `QuellSpacing.swift`, `QuellMotion.swift`, then a `TokenPreview` SwiftUI view that renders every token side by side. Visual checkpoint: Bailey looks at the preview screen and approves the palette in context.
 
 ## Where We Left Off
 
-Project files created:
-- `QUELL_PROJECT_BRIEF.md` (the source of truth)
-- `MEMORY.md` (this file)
-- `TASKS.md` (the live checklist)
+Repo state:
+- Xcode project exists at `Quell/Quell.xcodeproj`
+- `.gitignore` configured
+- Planning files committed at project root
+- No design system code yet
 
-Next concrete action: Open Xcode, create a new SwiftUI project named "Quell," commit to git, and create the design tokens Swift file.
+Next concrete action: Create the `Quell/DesignSystem/` group and start with `QuellColors.swift` (Color extensions for every token in the brief).
 
 ## Open Questions
 
@@ -62,19 +63,22 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 
 Most recent first. Move to the brief's Decisions Log when stable.
 
-- (Pending Phase 0) Confirmed iOS 17.0 minimum target.
-- (Pending Phase 0) Confirmed bundle ID format: `com.lightspacelabs.quell`.
+- Confirmed iOS 17.0 minimum target (locked in at Xcode project creation).
+- Confirmed bundle ID: `com.lightspacelabs.quell` (locked in at Xcode project creation).
 
 ## File Structure (current)
 
 ```
-quell/
+Quell/
 ├── QUELL_PROJECT_BRIEF.md
 ├── MEMORY.md
-└── TASKS.md
+├── TASKS.md
+├── .gitignore
+└── Quell/
+    └── Quell.xcodeproj
 ```
 
-Will expand as we build the Xcode project.
+Will expand as we build out the design system and screens.
 
 ## Notes for Next Session
 

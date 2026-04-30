@@ -14,21 +14,21 @@
 
 ### Slice 0.1: Pre-flight setup
 
-- [ ] Confirm Mac is ready (latest macOS, enough disk space)
-- [ ] Install latest stable Xcode from the App Store
-- [ ] Sign into Xcode with Apple ID
-- [ ] Decide whether to enroll in Apple Developer Program now ($99/year) or wait until first device test
-- [ ] Create a GitHub (or other) repo named `quell` and initialize locally
+- [x] Confirm Mac is ready (latest macOS, enough disk space)
+- [x] Install latest stable Xcode from the App Store
+- [x] Sign into Xcode with Apple ID
+- [x] Decide whether to enroll in Apple Developer Program now ($99/year) or wait until first device test
+- [x] Create a GitHub (or other) repo named `quell` and initialize locally
 
 ### Slice 0.2: Xcode project creation
 
-- [ ] Create new Xcode project: iOS App, SwiftUI, Swift, name "Quell"
-- [ ] Bundle identifier: `com.lightspacelabs.quell`
-- [ ] Minimum deployment: iOS 17.0
-- [ ] Confirm project builds and runs in simulator with default Hello World
-- [ ] First commit to git
-- [ ] Add the three planning files (`QUELL_PROJECT_BRIEF.md`, `MEMORY.md`, `TASKS.md`) to project root
-- [ ] **Visual checkpoint:** simulator shows default screen, no errors
+- [x] Create new Xcode project: iOS App, SwiftUI, Swift, name "Quell"
+- [x] Bundle identifier: `com.lightspacelabs.quell`
+- [x] Minimum deployment: iOS 17.0
+- [x] Confirm project builds and runs in simulator with default Hello World
+- [x] First commit to git
+- [x] Add the three planning files (`QUELL_PROJECT_BRIEF.md`, `MEMORY.md`, `TASKS.md`) to project root
+- [x] **Visual checkpoint:** simulator shows default screen, no errors
 
 ### Slice 0.3: Design token system
 
