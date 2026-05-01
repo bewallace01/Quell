@@ -57,9 +57,9 @@
 
 ### Phase 0 Closeout
 
-- [ ] Update `MEMORY.md` with Phase 0 summary
-- [ ] Update Decisions Log in brief with anything new
-- [ ] Take a screenshot of the placeholder screen for posterity
+- [x] Update `MEMORY.md` with Phase 0 summary
+- [x] Update Decisions Log in brief with anything new
+- [x] Take a screenshot of the placeholder screen for posterity
 - [ ] Decide: ready for Phase 1?
 
 ---

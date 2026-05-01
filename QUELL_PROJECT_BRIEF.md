@@ -210,6 +210,11 @@ Major decisions made and why. Add to this when something changes.
 - **iOS-only v1** (animation feel is core; solo founder ships faster on one platform; iOS demographics align with target user willingness to pay).
 - **No calorie tracking, ever** (philosophical core; also App Store ED-content safety).
 - **No streaks** (binary-thinking trap that fuels shame spirals).
+- **iOS 17.0 minimum deployment target** (locked at Xcode project setup in Phase 0; gives modern animation and observation APIs).
+- **Bundle identifier: `com.lightspacelabs.quell`** (locked at Xcode project setup in Phase 0).
+- **Display font: Fraunces. UI/body font: Geist.** (Both Google Fonts, free, variable; resolved in Phase 0 against the original candidate lists. Sourced as variable `.ttf` files from each project's official GitHub repo.)
+- **Visual concept: bioluminescent ocean at twilight** (replaced an earlier "still water at dusk" framing during Phase 0 once a real reference image was in hand; led to a full palette rebuild around polar tension between cool electric glow and warm horizon ember held in deep blue dark, and to the Color roles and rules system).
+- **iPhone-only Supported Destinations** (refinement of iOS-only v1, locked in Phase 0 closeout; drops iPad, Mac Designed for iPad, Mac Catalyst, and visionOS variants. iPad layout is post-launch backlog.)
 
 ---
 

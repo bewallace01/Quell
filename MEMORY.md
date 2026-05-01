@@ -68,11 +68,12 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 
 Most recent first. Move to the brief's Decisions Log when stable.
 
-- Fraunces and Geist sourced as variable .ttf files from their official GitHub repos (googlefonts/fraunces, vercel/geist-font), bundled in `Quell/Quell/Fonts/`, and registered via a project `Info.plist` containing `UIAppFonts`. SwiftUI calls use family name + `.weight(...)`. Verified rendering on iOS Simulator.
-- Color palette rebuilt against a bioluminescent-ocean reference image. Brand visual concept shifted from "still water at dusk" to "bioluminescent ocean at twilight." Palette is now organized into bases, text, cool family (Moon + Glow), and warm family (Ember + Dawn). Each color has a defined role and rule. quellCalm and quellAlert are now aliases of Moon and Ember rather than independent colors. Total unique colors: 10.
-- Display font: Fraunces. UI/body font: Geist. Both Google Fonts, both free, both variable.
-- Confirmed iOS 17.0 minimum target (locked in at Xcode project creation).
-- Confirmed bundle ID: `com.lightspacelabs.quell` (locked in at Xcode project creation).
+_(Phase 0 decisions migrated to the brief's Decisions Log: typography, bundle ID, iOS 17.0 minimum, bioluminescent visual concept + palette rebuild, iPhone-only destinations.)_
+
+Operational notes from Phase 0 worth keeping locally:
+
+- Fraunces and Geist were sourced as variable `.ttf` files from `googlefonts/fraunces` and `vercel/geist-font` (default branch differed: Fraunces is on `master`, Geist is on `main`). Registered via a project `Info.plist` with `UIAppFonts`. SwiftUI calls use family name + `.weight(...)`.
+- Project uses Xcode 16's synchronized-folder mechanism (`PBXFileSystemSynchronizedRootGroup`); files dropped into `Quell/Quell/` are auto-included in the target. `Info.plist` is the one explicit exception.
 
 ## File Structure (current)
 
