@@ -8,27 +8,31 @@
 
 **Phase 1: Home Screen**
 
-Slice 1.1 (BreathingShape) shipped. Working forward through 1.2 ("right now i'm…" prompt), 1.3 (word-stones), 1.4 (placeholder routing).
+Slices 1.1 (BreathingShape), 1.2 (prompt), and 1.3 (word-stones) all shipped. Home composition is visually complete; only routing (Slice 1.4) remains before Phase 1 closeout.
 
 ## Last Session Summary
 
-Closed Slice 1.1. Shipped `BreathingShape` — a radial gradient orb (ember → dawn → moon → midnight, weighted so the warm core sits inside ~22% of the radius and blue dominates from 50% out) with a 4s inhale + 0.4s peak hold + 6s exhale + 1.2s trough rest cycle, animated via `quellEaseGentle` (decelerate curve) on both directions. A subtle `.blur(radius: 6)` placed before `.scaleEffect` makes the orb slightly more diffuse at peak inhale and more defined at trough — the blur breathes with the body. Wired into `PlaceholderHomeView` in place of the "quell" wordmark; the orb is now the home centerpiece. Iteration was tight: gradient went through three-stop variants (moon-midnight, ember-moon-midnight, ember-dawn-moon-midnight) before landing on the four-stop with weighted locations and a dawn intermediary that bridges the warm-cool perceptual jump.
+Closed Slices 1.2 and 1.3 together. Slice 1.2 added the "right now i'm…" prompt above the orb — initially shipped as `quellDisplay` (Fraunces 36pt light), stepped down to `quellTitle` (24pt) after stare-test, with fade-in delayed 0.6s behind the orb. After that change Bailey flagged that the home felt off-balance, but the bottom-half emptiness was the missing word-stones, not a tuning issue with 1.2 — so we pushed forward.
+
+Slice 1.3 introduced `WordStone.swift` in `Components/`: a soft floating word with no chrome at rest, scale-to-0.96-during-press via a custom `StonePressStyle`, soft-impact haptic via SwiftUI's `.sensoryFeedback`, and a brief `quellGlow` capsule + shadow on tap that fades out over `quellDurSlow`. Added a new typography token `.quellStone` (Fraunces 20pt light, between `quellTitle` and `quellHeadline`) — designed to be reused for mood bubbles in Slice 2.4 and other soft option labels. Initial 2x2 layout used two HStacks but labels of different widths centered differently, so switched to `LazyVGrid` with two flexible columns and `quellSpace7` horizontal padding for clean column alignment. Stones fade in last — the home now stages: orb at t=0, prompt at t=0.6, stones at t=1.2.
+
+Operational note: started running `xcodebuild` after Swift edits this session (after Bailey explicitly caught me telling them to verify what I should have verified myself). SourceKit diagnostics in the editor are unreliable for synchronized-root-group projects — they cascade false errors after any file change. Saved as a feedback memory.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 1.2: "Right now i'm…" prompt.** Place the prompt above the breathing shape, in display font (Fraunces) light weight, `quellCream`, with generous spacing. Subtle fade-in delayed slightly behind the orb's appearance.
+**Slice 1.4: Placeholder routing.** Each word-stone navigates to a placeholder screen showing just the word it represents. Soft dissolve transition, not a slide. Small back gesture or button to return to home. Visual checkpoint: navigation feels like water, no sharp edges.
 
 ## Where We Left Off
 
 Repo state:
-- `BreathingShape.swift` lives in `Quell/Quell/Components/` (new folder under the synchronized root group)
-- `PlaceholderHomeView` renders `BreathingShape` as its content; the Phase 0 wordmark is retired
-- All Phase 0 tokens (colors, typography, spacing, motion) carry forward unchanged
-- `BreathingShape` is reusable: single `size: CGFloat = 200` parameter, intended to scale up for the larger co-regulation circle in Slice 2.1
+- `Quell/Quell/Components/` contains `BreathingShape.swift` and `WordStone.swift`
+- `PlaceholderHomeView` is the full home composition: prompt → orb → 2x2 stone grid (Steady · Wobbling / In it · Need company), staggered fade-in
+- New typography token `.quellStone` in `QuellTypography.swift`
+- Word-stone tap actions are no-op closures — wired to fire haptic + glow visuals but go nowhere yet (Slice 1.4's job)
 
-Next concrete action: Slice 1.2 — drop "right now i'm…" above the orb. Use Fraunces (`.quellDisplay`) light weight, `quellCream`, with delayed fade-in (slightly behind the orb's first appearance). Generous vertical spacing.
+Next concrete action: Slice 1.4 — give each `WordStone` a destination. Likely a `NavigationStack` (or simple `@State` driven view swap) with a placeholder destination view that renders just the chosen word in `.quellDisplay`. Use a soft fade/dissolve transition, not the default slide. Need a back gesture/button on the destination.
 
 ## Open Questions
 
@@ -50,6 +54,8 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - `TokenPreview` is the current visual checkpoint and shows the full palette/type/spacing/motion language in one screen.
 - `PlaceholderHomeView` ships as the app's actual root: "quell" in Fraunces Light, centered on `quellMidnight`. Brand presence on first launch. *(As of Slice 1.1, the wordmark is replaced by `BreathingShape`; the view name is retained as the evolving home surface.)*
 - `BreathingShape` reads as a real breath. Peak hold + trough rest beat the metronomic feel; the breath-modulated blur (slightly more diffuse at peak) gives it body warmth; ember core through dawn to moon makes the orb look like light through a closed eyelid. Visual checkpoint passed on first stare-test after iteration.
+- "right now i'm…" prompt at `quellTitle` (24pt) reads as a gentle invitation. The lowercase + horizontal ellipsis carries the brand voice (matches "i'm here. breathe with me." in Slice 2.1's spec). 36pt was too forward; 24pt is the sweet spot for a question that invites rather than demands.
+- Word-stones feel like words, not buttons. Fraunces light at 20pt with no chrome reads as language; the soft-impact haptic + glow on tap acknowledges without snapping. Bailey's gut check on the visual checkpoint: "looks good."
 
 ## What's Not Working
 
@@ -66,6 +72,14 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 1 — Slices 1.2 + 1.3 (Prompt and word-stones):**
+
+- **Prompt typography.** "right now i'm…" uses `.quellTitle` (Fraunces 24pt light), not `.quellDisplay` (36pt) as the slice spec originally called for. 36pt felt too forward for a prompt-as-invitation; 24pt holds presence without demanding.
+- **`.quellStone` token added** to `QuellTypography.swift`. Fraunces 20pt light, between `quellTitle` and `quellHeadline`. Anticipated reuse: mood bubbles (Slice 2.4), sensory icons (Slice 4.1), and other "soft option label" patterns. Display-voice (Fraunces) was chosen over UI-voice (Geist) so word-stones read as language rather than interface — they're choices the user is making in their own voice, not buttons in a chrome.
+- **Word-stone tap response.** Three-layer feedback: scale-down to 0.96 during press (live, via custom `StonePressStyle`), soft-impact haptic (`.sensoryFeedback(.impact(flexibility: .soft, intensity: 0.6))`), and a `quellGlow` capsule + shadow that fades over `quellDurSlow`. The haptic + glow fire on tap action; the scale fires on press. This means the user feels the press start and release as separate moments — gentle, not punchy.
+- **Layout: `LazyVGrid` over paired HStacks.** Two flexible columns + `quellSpace7` horizontal padding so labels of varying widths column-align cleanly. HStack-pair rows centered each pair independently, which made the second row drift off the first row's column lines.
+- **Staggered fade-in cadence.** Orb t=0, prompt t=0.6, stones t=1.2 — each over `quellDurSlow` (0.8s). Home arrives in layers, like a doorway opening.
 
 **Phase 1 — Slice 1.1 (Breathing shape):**
 
@@ -102,7 +116,8 @@ Quell/
         │   ├── QuellMotion.swift
         │   └── TokenPreview.swift
         ├── Components/
-        │   └── BreathingShape.swift
+        │   ├── BreathingShape.swift
+        │   └── WordStone.swift
         ├── Screens/
         │   └── PlaceholderHomeView.swift
         └── Fonts/

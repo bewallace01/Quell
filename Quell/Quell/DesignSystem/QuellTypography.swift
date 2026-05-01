@@ -13,6 +13,9 @@ extension Font {
     /// Screen titles in the display voice.
     static let quellTitle = Font.custom(quellDisplayFamily, size: 24, relativeTo: .title).weight(.light)
 
+    /// Word-stones, mood bubbles, soft option labels. Display voice, smaller register.
+    static let quellStone = Font.custom(quellDisplayFamily, size: 20, relativeTo: .body).weight(.light)
+
     // MARK: - UI / Body (Geist)
 
     /// Section headers and prominent UI text.

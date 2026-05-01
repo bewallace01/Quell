@@ -82,19 +82,19 @@
 
 ### Slice 1.2: "Right now i'm…" prompt
 
-- [ ] Add the prompt above the breathing shape in display font, light weight
-- [ ] Use `quellCream` color
-- [ ] Generous spacing above and below
-- [ ] Subtle fade-in on app launch, slightly delayed from the shape's appearance
-- [ ] **Visual checkpoint:** prompt feels like a gentle invitation, not a question being demanded.
+- [x] Add the prompt "right now i'm…" (lowercase, horizontal ellipsis) above the breathing shape in `quellTitle` (Fraunces 24pt light). Stepped down from `quellDisplay` 36pt after stare-test felt too large.
+- [x] Use `quellCream` color
+- [x] Generous spacing above and below — `quellSpace8` (64pt) between prompt, orb, and word-stones region
+- [x] Subtle fade-in on app launch, delayed 0.6s after the orb begins fading in
+- [x] **Visual checkpoint:** prompt feels like a gentle invitation, not a question being demanded.
 
 ### Slice 1.3: The four word-stones
 
-- [ ] Create `WordStone.swift` — a reusable button that looks like a soft floating word, not a button
-- [ ] Layout: four word-stones below the breathing shape — Steady · Wobbling · In it · Need company
-- [ ] Each tap should give a soft haptic and a brief visual response (gentle scale, glow with `quellGlow`)
-- [ ] Test the touch targets are large enough (min 44pt)
-- [ ] **Visual checkpoint:** tap each one. Does the response feel warm? Or does it feel like a button click? Adjust.
+- [x] Create `WordStone.swift` in `Quell/Quell/Components/`. Uses new `.quellStone` token (Fraunces 20pt light, added to `QuellTypography.swift` between `quellTitle` and `quellHeadline`). No chrome at rest — soft floating word.
+- [x] Layout: four word-stones below the breathing shape — Steady · Wobbling · In it · Need company. Initially two HStack rows; switched to `LazyVGrid` with two flexible columns + `quellSpace7` horizontal padding so labels of different widths column-align cleanly.
+- [x] Each tap: soft haptic via `.sensoryFeedback(.impact(flexibility: .soft, intensity: 0.6))`, scale to 0.96 during press via custom `StonePressStyle`, brief `quellGlow` capsule background (opacity 0.18, blurred) + shadow (opacity 0.5, radius 16) that fades out over `quellDurSlow` after `quellDurFast`.
+- [x] Touch targets: 44pt min via `.frame(minWidth: 44, minHeight: 44)` plus `quellSpace5`/`quellSpace3` padding.
+- [x] **Visual checkpoint:** tap each one. Does the response feel warm? Or does it feel like a button click? Adjust.
 
 ### Slice 1.4: Placeholder routing
 
