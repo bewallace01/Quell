@@ -44,7 +44,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 
 (Update as we go.)
 
-Nothing built yet.
+- Color palette derived from a real reference image rather than guessed. Roles and rules are explicit, so future decisions about where to use color have a clear framework.
 
 ## What's Not Working
 
@@ -62,6 +62,7 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 
 Most recent first. Move to the brief's Decisions Log when stable.
 
+- Color palette rebuilt against a bioluminescent-ocean reference image. Brand visual concept shifted from "still water at dusk" to "bioluminescent ocean at twilight." Palette is now organized into bases, text, cool family (Moon + Glow), and warm family (Ember + Dawn). Each color has a defined role and rule. quellCalm and quellAlert are now aliases of Moon and Ember rather than independent colors. Total unique colors: 10.
 - Display font: Fraunces. UI/body font: Geist. Both Google Fonts, both free, both variable.
 - Confirmed iOS 17.0 minimum target (locked in at Xcode project creation).
 - Confirmed bundle ID: `com.lightspacelabs.quell` (locked in at Xcode project creation).

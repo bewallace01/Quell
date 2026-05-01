@@ -54,7 +54,7 @@ Tertiary: people in early ED recovery looking for tools that don't reinforce res
 - "wave's gonna pass. it always does."
 - "no verdict. just data. you're doing the work by being here."
 
-**Visual concept:** Still water at dusk. Deep slate, soft moonlit teal, warm cream. Quiet, weighted, mature. Not floaty wellness — grounded calm. Stones and depth as visual motifs alongside water.
+**Visual concept:** Bioluminescent ocean at twilight. The threshold hour when day has just gone but the world is alive with quiet light. Polar tension between cool electric glow and warm horizon ember, held in deep blue dark. Light emerges from within the darkness — directly metaphorical for what the app helps the user do.
 
 **Inconspicuous by design:** App must pass the home-screen test (icon and name reveal nothing), the shoulder-surf test (a glance reveals nothing diagnostic), and the notification test (push copy reads like a friend texting, never like a clinical alert).
 
@@ -66,25 +66,40 @@ These are referenced everywhere. Change a token, change the whole app. Never har
 
 ```
 // Bases
-quellMidnight  #0A0F1A   deep slate-blue, almost black
-quellDeep      #131A2B   one step lighter, cards/surfaces
-quellShade     #1C2438   elevated surfaces
+quellMidnight  #0B1220   deep night, the silhouette against the sky
+quellDeep      #131C2E   water away from the glow
+quellShade     #1C2638   elevated surfaces
 
 // Text
-quellCream     #F4EDE0   primary text, never pure white
-quellMist      #A8B0C2   secondary text
-quellWhisper   #5C6478   tertiary text
+quellCream     #F2EBDD   primary text, warm cream — never pure white
+quellMist      #A0AAC0   secondary text, cool gray-blue
+quellWhisper   #565F76   tertiary text, very subtle
 
-// Accents
-quellMoon      #5EBFB5   primary accent, calm teal
-quellGlow      #8FE4D6   active states, brighter teal-aqua
-quellEmber     #D4928A   human-moment warm accent, dusty rose, used sparingly
-quellDawn      #E8B894   secondary warm, even rarer
+// Cool family
+quellMoon      #4A8FB5   calm steel-blue, always-there primary accent
+quellGlow      #2585D4   electric bioluminescent blue, active states only
+
+// Warm family
+quellEmber     #D85A30   sunset-band orange, charged/rare human warmth
+quellDawn      #E8946A   diffused warm, routine warmth
 
 // Functional
-quellCalm      #5EBFB5   success/calm (same as Moon)
-quellAlert     #D4928A   attention without alarm (same as Ember)
+quellCalm      = quellMoon   (#4A8FB5)
+quellAlert     = quellEmber  (#D85A30)
 ```
+
+### Color roles and rules
+
+Each color has a clear job. Don't reach for a color outside its role.
+
+- Midnight/Deep/Shade: the world. Three steps of dark, used as backgrounds, surfaces, elevated cards.
+- Cream/Mist/Whisper: the words. Three steps of text from primary to barely-there.
+- Moon: the calm primary accent. Always-there. Used for buttons, the breathing shape's resting state, navigation indicators.
+- Glow: the active state. Appears only when something is *actually happening* — taps, transitions, breathing-circle pulses, the moment a co-regulation begins. Never decorative.
+- Ember: rare and charged. The color of human warmth in dark places. Reserved for moments that matter — Wren's most intimate copy, the Future Self voice note marker, the small glow that says 'you came back.' If your eye lands on something Embered, that moment matters.
+- Dawn: routine warmth. The diffused, softer warm. Appears in regular UI where something needs to feel held without being charged.
+
+The cool family (Moon, Glow) and the warm family (Ember, Dawn) carry polar tension. The brand lives in the space between.
 
 ### Typography
 

@@ -37,20 +37,22 @@ struct TokenPreview: View {
         SectionContainer(title: "colors") {
             VStack(alignment: .leading, spacing: .quellSpace5) {
                 ColorGroup(title: "bases", swatches: [
-                    .init(name: "quellMidnight", hex: "#0A0F1A", color: .quellMidnight),
-                    .init(name: "quellDeep",     hex: "#131A2B", color: .quellDeep),
-                    .init(name: "quellShade",    hex: "#1C2438", color: .quellShade),
+                    .init(name: "quellMidnight", hex: "#0B1220", color: .quellMidnight),
+                    .init(name: "quellDeep",     hex: "#131C2E", color: .quellDeep),
+                    .init(name: "quellShade",    hex: "#1C2638", color: .quellShade),
                 ])
                 ColorGroup(title: "text", swatches: [
-                    .init(name: "quellCream",   hex: "#F4EDE0", color: .quellCream),
-                    .init(name: "quellMist",    hex: "#A8B0C2", color: .quellMist),
-                    .init(name: "quellWhisper", hex: "#5C6478", color: .quellWhisper),
+                    .init(name: "quellCream",   hex: "#F2EBDD", color: .quellCream),
+                    .init(name: "quellMist",    hex: "#A0AAC0", color: .quellMist),
+                    .init(name: "quellWhisper", hex: "#565F76", color: .quellWhisper),
                 ])
-                ColorGroup(title: "accents", swatches: [
-                    .init(name: "quellMoon",  hex: "#5EBFB5", color: .quellMoon),
-                    .init(name: "quellGlow",  hex: "#8FE4D6", color: .quellGlow),
-                    .init(name: "quellEmber", hex: "#D4928A", color: .quellEmber),
-                    .init(name: "quellDawn",  hex: "#E8B894", color: .quellDawn),
+                ColorGroup(title: "cool", swatches: [
+                    .init(name: "quellMoon", hex: "#4A8FB5", color: .quellMoon),
+                    .init(name: "quellGlow", hex: "#2585D4", color: .quellGlow),
+                ])
+                ColorGroup(title: "warm", swatches: [
+                    .init(name: "quellEmber", hex: "#D85A30", color: .quellEmber),
+                    .init(name: "quellDawn",  hex: "#E8946A", color: .quellDawn),
                 ])
                 ColorGroup(title: "functional", swatches: [
                     .init(name: "quellCalm",  hex: "= quellMoon",  color: .quellCalm),
