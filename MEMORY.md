@@ -6,33 +6,29 @@
 
 ## Current Phase
 
-**Phase 1: Home Screen**
+**Phase 1: Home Screen — closeout**
 
-Slices 1.1 (BreathingShape), 1.2 (prompt), and 1.3 (word-stones) all shipped. Home composition is visually complete; only routing (Slice 1.4) remains before Phase 1 closeout.
+All four slices (1.1 BreathingShape, 1.2 prompt, 1.3 word-stones, 1.4 placeholder routing) shipped. Phase 1 closeout has two open items, both Bailey's: (1) 60-second cold-launch vibes check, (2) decide on Phase 2 entry.
 
 ## Last Session Summary
 
-Closed Slices 1.2 and 1.3 together. Slice 1.2 added the "right now i'm…" prompt above the orb — initially shipped as `quellDisplay` (Fraunces 36pt light), stepped down to `quellTitle` (24pt) after stare-test, with fade-in delayed 0.6s behind the orb. After that change Bailey flagged that the home felt off-balance, but the bottom-half emptiness was the missing word-stones, not a tuning issue with 1.2 — so we pushed forward.
-
-Slice 1.3 introduced `WordStone.swift` in `Components/`: a soft floating word with no chrome at rest, scale-to-0.96-during-press via a custom `StonePressStyle`, soft-impact haptic via SwiftUI's `.sensoryFeedback`, and a brief `quellGlow` capsule + shadow on tap that fades out over `quellDurSlow`. Added a new typography token `.quellStone` (Fraunces 20pt light, between `quellTitle` and `quellHeadline`) — designed to be reused for mood bubbles in Slice 2.4 and other soft option labels. Initial 2x2 layout used two HStacks but labels of different widths centered differently, so switched to `LazyVGrid` with two flexible columns and `quellSpace7` horizontal padding for clean column alignment. Stones fade in last — the home now stages: orb at t=0, prompt at t=0.6, stones at t=1.2.
-
-Operational note: started running `xcodebuild` after Swift edits this session (after Bailey explicitly caught me telling them to verify what I should have verified myself). SourceKit diagnostics in the editor are unreliable for synchronized-root-group projects — they cascade false errors after any file change. Saved as a feedback memory.
+Closed Slice 1.4. Shipped `StoneDestinationView` — a midnight surface that holds just the chosen word in `.quellDisplay` (Fraunces 36pt light), centered on `quellMidnight`, with the word fading in 0.2s after the surface materializes (moment of held space, then the word arrives). Tap-anywhere dismiss — no chrome, most water-like for a placeholder; will revisit when destinations have real content. Routing uses a state-driven view swap (`@State var selected: String?`) rather than `NavigationStack`, because the default push transition is a slide and customizing it fights the framework. Cross-fade via `.transition(.opacity)` with `quellEaseSlow` over `quellDurSlow`. The home view is opacity-toggled rather than swapped, so its staggered fade-in cadence only plays on first launch; return-from-destination is just an opacity flip.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 1.4: Placeholder routing.** Each word-stone navigates to a placeholder screen showing just the word it represents. Soft dissolve transition, not a slide. Small back gesture or button to return to home. Visual checkpoint: navigation feels like water, no sharp edges.
+**Phase 1 Closeout.** Bailey opens the app cold, uses it for 60 seconds, gut-checks: does it feel like Quell? Then decides: ready for Phase 2 (the urge flow)?
 
 ## Where We Left Off
 
 Repo state:
 - `Quell/Quell/Components/` contains `BreathingShape.swift` and `WordStone.swift`
-- `PlaceholderHomeView` is the full home composition: prompt → orb → 2x2 stone grid (Steady · Wobbling / In it · Need company), staggered fade-in
-- New typography token `.quellStone` in `QuellTypography.swift`
-- Word-stone tap actions are no-op closures — wired to fire haptic + glow visuals but go nowhere yet (Slice 1.4's job)
+- `Quell/Quell/Screens/` contains `PlaceholderHomeView.swift` and `StoneDestinationView.swift`
+- The home flow runs end-to-end on first launch: orb fades in → prompt fades in → stones fade in → tap stone → dissolve to destination → tap to dissolve back. No back-stacking, no visible chrome.
+- All four word-stones route to the same destination type (just the word). Phase 2 will replace the "In it" route with the real co-regulation flow; Phases 3-6 will replace the others.
 
-Next concrete action: Slice 1.4 — give each `WordStone` a destination. Likely a `NavigationStack` (or simple `@State` driven view swap) with a placeholder destination view that renders just the chosen word in `.quellDisplay`. Use a soft fade/dissolve transition, not the default slide. Need a back gesture/button on the destination.
+Next concrete action: Phase 1 closeout. Bailey does the 60-second cold-launch vibes check and decides on Phase 2. Phase 2 starts with Slice 2.1 (the 60-second co-regulation screen on "In it" tap — fade screen to near-black, "i'm here. breathe with me." in display font, larger breathing circle, 8-second held silence before stay/skip-ahead buttons appear).
 
 ## Open Questions
 
@@ -56,6 +52,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - `BreathingShape` reads as a real breath. Peak hold + trough rest beat the metronomic feel; the breath-modulated blur (slightly more diffuse at peak) gives it body warmth; ember core through dawn to moon makes the orb look like light through a closed eyelid. Visual checkpoint passed on first stare-test after iteration.
 - "right now i'm…" prompt at `quellTitle` (24pt) reads as a gentle invitation. The lowercase + horizontal ellipsis carries the brand voice (matches "i'm here. breathe with me." in Slice 2.1's spec). 36pt was too forward; 24pt is the sweet spot for a question that invites rather than demands.
 - Word-stones feel like words, not buttons. Fraunces light at 20pt with no chrome reads as language; the soft-impact haptic + glow on tap acknowledges without snapping. Bailey's gut check on the visual checkpoint: "looks good."
+- The home → destination → home dissolve reads as water. Cross-fade with no back-stacking, no slide, no chrome — just the surface dissolving from a question to a held word and back. Bailey's checkpoint: "good."
 
 ## What's Not Working
 
@@ -72,6 +69,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 1 — Slice 1.4 (Placeholder routing):**
+
+- **State-driven swap over `NavigationStack`.** Routing uses a single `@State var selected: String?` to toggle between home and destination. Reason: `NavigationStack`'s default push is a slide, and customizing it for a soft dissolve fights the framework. The dissolve is the brand. When Phase 2 introduces real depth, we'll likely add `NavigationStack` with a custom transition theme, or build a router around state + transitions. For Phase 1's two-screen depth, state is enough.
+- **Home stays alive in the background.** Both home and destination are children of a single ZStack; home is opacity-toggled rather than swapped. This means the home's staggered fade-in cadence only plays on first launch, and return-from-destination is an opacity flip rather than a re-stage. The breathing orb keeps animating in the background even when invisible — slight battery cost we'll evaluate later if it matters.
+- **Tap-anywhere dismiss.** No chrome, no back chevron, no swipe gesture. The destination is a held surface; touching it dissolves it back. Discoverability could be a concern for real destinations, but for placeholders it's fine — and it's the most water-like default. Revisit when destinations have content.
+- **Held-space moment before the word arrives.** Destination word fades in 0.2s after the surface materializes. This creates a brief "you've arrived" pause — the field receives you, and then the word is there. Reused pattern: stagger micro-delays between elements arriving on a screen, even within a single view.
 
 **Phase 1 — Slices 1.2 + 1.3 (Prompt and word-stones):**
 
@@ -119,7 +123,8 @@ Quell/
         │   ├── BreathingShape.swift
         │   └── WordStone.swift
         ├── Screens/
-        │   └── PlaceholderHomeView.swift
+        │   ├── PlaceholderHomeView.swift
+        │   └── StoneDestinationView.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf

@@ -98,14 +98,15 @@
 
 ### Slice 1.4: Placeholder routing
 
-- [ ] Each word-stone navigates to a placeholder screen showing just the word it represents
-- [ ] Use a soft dissolve transition, not a slide
-- [ ] Add a small back gesture or button to return to home
-- [ ] **Visual checkpoint:** the navigation feels like water. No sharp edges.
+- [x] Each word-stone navigates to `StoneDestinationView(word:)` showing just the word in `quellDisplay` (Fraunces 36pt light), centered on `quellMidnight`. Word fades in 0.2s after the surface materializes — moment of held space, then the word arrives.
+- [x] Soft dissolve transition via `.transition(.opacity)` with `quellEaseSlow` over `quellDurSlow`. State-driven view swap (`@State var selected: String?`) rather than `NavigationStack` — the default `NavigationStack` push is a slide and customizing it fights the framework. Will introduce `NavigationStack` with a custom transition theme in Phase 2 when there's real depth to manage.
+- [x] Tap-anywhere dismiss on the destination — no chrome, most water-like for a placeholder. Will revisit when destinations have real content (Phases 2-6).
+- [x] Home view stays alive in the background (opacity-toggled rather than swapped) so its staggered fade-in cadence only plays on first launch; return-from-destination is an opacity flip, not a re-stage.
+- [x] **Visual checkpoint:** the navigation feels like water. No sharp edges.
 
 ### Phase 1 Closeout
 
-- [ ] Update MEMORY.md
+- [x] Update MEMORY.md
 - [ ] Vibes check: open the app cold and use it for 60 seconds. Does it feel like Quell?
 - [ ] Decide: ready for Phase 2?
 
