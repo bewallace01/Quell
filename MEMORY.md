@@ -8,28 +8,29 @@
 
 **Phase 0: Foundation**
 
-Slices 0.1, 0.2, and 0.3 are complete. Next up: Slice 0.4 (App shell + first real screen — `PlaceholderHomeView`).
+All four slices (0.1 pre-flight, 0.2 Xcode project, 0.3 design tokens, 0.4 app shell + PlaceholderHomeView) are complete. Phase 0 closeout is the only remaining work before Phase 1.
 
 ## Last Session Summary
 
-Built out the full design token system in `Quell/Quell/DesignSystem/`: `QuellColors.swift`, `QuellTypography.swift`, `QuellSpacing.swift`, `QuellMotion.swift`, plus a `TokenPreview` SwiftUI view that renders every token in context. Rebuilt the color palette mid-slice against a bioluminescent-ocean reference image (10 unique colors, two families: cool Moon+Glow, warm Ember+Dawn). Wired Fraunces (display) and Geist (UI/body) from Google Fonts as variable .ttf files in the bundle. `QuellApp.swift` currently launches into `TokenPreview()` as the visual checkpoint.
+Closed out Slice 0.4: built `PlaceholderHomeView` showing "quell" in Fraunces Light on `quellMidnight`, rewired `QuellApp.swift` to use it as the actual root, stripped the SwiftData scaffolding (no longer needed in v1; Pattern Detective storage is Phase 8 work), and deleted the orphan template files (`ContentView.swift`, `Item.swift`). The app now launches directly into the brand surface. Fade-in is implemented but iOS's launch sequence masks the animation visually — flagged for revisit when the pattern lives somewhere without a launch boundary.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 0.4: App shell + first real screen.** Create `PlaceholderHomeView` showing the word "quell" in `quellDisplay` (Fraunces Light), centered on `quellMidnight`, with a subtle fade-in on appear. Replace `TokenPreview()` in `QuellApp.swift` with this new view as the actual root.
+**Phase 0 Closeout.** Update Decisions Log in the brief if anything new, screenshot the placeholder for posterity, decide whether ready for Phase 1.
 
 ## Where We Left Off
 
 Repo state:
-- Design system tokens shipped and rendering correctly in TokenPreview
-- Fraunces and Geist fonts bundled and registered (UIAppFonts in Info.plist)
-- `QuellApp.swift` temporarily points at `TokenPreview()` — to be replaced by `PlaceholderHomeView` in Slice 0.4
-- Project still has macOS in Supported Destinations (caused a UIKit build error during font debug); needs narrowing to iPhone-only as a small cleanup before Phase 0 closes
-- Two reference images at repo root are now `.gitignore`d
+- Design system tokens shipped (colors, typography, spacing, motion) and rendering correctly
+- Fraunces and Geist fonts bundled and registered
+- `QuellApp.swift` is clean (no SwiftData), launches directly into `PlaceholderHomeView`
+- Template scaffolding (`ContentView.swift`, `Item.swift`) deleted
+- Supported Destinations narrowed to iPhone only
+- Reference images gitignored
 
-Next concrete action: Build `PlaceholderHomeView` per Slice 0.4. Also: narrow Supported Destinations to iPhone (Xcode UI step Bailey does).
+Next concrete action: Phase 0 closeout — confirm decisions log is current, capture screenshot, then decide on Phase 1 entry. Phase 1 starts with Slice 1.1 (BreathingShape).
 
 ## Open Questions
 
@@ -49,12 +50,13 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - Design system token files (colors, typography, spacing, motion) are in place. All call sites can reference `.quellMidnight`, `.quellBody`, `.quellSpace4`, `.quellEaseGentle()` etc. without hard-coded values.
 - Fraunces and Geist render correctly on iOS Simulator. Variable fonts, family-name-only, weight applied via `.weight(...)`.
 - `TokenPreview` is the current visual checkpoint and shows the full palette/type/spacing/motion language in one screen.
+- `PlaceholderHomeView` ships as the app's actual root: "quell" in Fraunces Light, centered on `quellMidnight`. Brand presence on first launch.
 
 ## What's Not Working
 
 (Update as we go.)
 
-Nothing to break yet.
+- The fade-in on `PlaceholderHomeView` is technically running but visually imperceptible — iOS's launch transition masks it. Not a bug; pattern needs to live somewhere without a launch boundary to read properly. Revisit when applied to in-app transitions.
 
 ## Vibes Check
 
@@ -83,9 +85,7 @@ Quell/
 └── Quell/
     ├── Quell.xcodeproj
     └── Quell/
-        ├── QuellApp.swift              (root view: TokenPreview() — temporary)
-        ├── ContentView.swift           (default template, unused)
-        ├── Item.swift                  (default SwiftData template, unused)
+        ├── QuellApp.swift              (root view: PlaceholderHomeView())
         ├── Info.plist                  (UIAppFonts registration)
         ├── Assets.xcassets/
         ├── DesignSystem/
@@ -94,12 +94,14 @@ Quell/
         │   ├── QuellSpacing.swift
         │   ├── QuellMotion.swift
         │   └── TokenPreview.swift
+        ├── Screens/
+        │   └── PlaceholderHomeView.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf
 ```
 
-Will expand as we build out screens. `ContentView.swift` and `Item.swift` are leftover from the SwiftUI App template and will be deleted once `PlaceholderHomeView` lands.
+Will expand as we build out screens.
 
 ## Notes for Next Session
 

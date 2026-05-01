@@ -42,11 +42,11 @@
 
 ### Slice 0.4: App shell and first real screen
 
-- [ ] Replace default ContentView with a `QuellApp` root view
-- [ ] Set the app's background to `quellMidnight`
-- [ ] Create `PlaceholderHomeView.swift` showing just the word "quell" in display font, centered, on midnight background
-- [ ] Add subtle fade-in animation on appear
-- [ ] **Visual checkpoint:** the app launches, shows "quell" softly fading in on a deep slate background. Feels quiet, intentional.
+- [x] Replace default ContentView with a `QuellApp` root view
+- [x] Set the app's background to `quellMidnight`
+- [x] Create `PlaceholderHomeView.swift` showing just the word "quell" in display font, centered, on midnight background
+- [x] Add subtle fade-in animation on appear *(in code; iOS launch sequence currently masks the visual; revisit when this pattern lives somewhere without a launch boundary)*
+- [x] **Visual checkpoint:** the app launches, shows "quell" softly fading in on a deep slate background. Feels quiet, intentional.
 
 ### Slice 0.5: First device test (optional but recommended)
 
