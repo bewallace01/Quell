@@ -41,3 +41,8 @@ fastlane/test_output
 
 # Logs
 *.log
+
+# Reference images (kept locally for visual reference, not project artifacts)
+/4KE9M1T_algae_blue_avif.png
+/bioluminescent_beach.jpg
+/references/

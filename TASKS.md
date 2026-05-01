@@ -32,13 +32,13 @@
 
 ### Slice 0.3: Design token system
 
-- [ ] Create `Quell/DesignSystem/` folder in project
-- [ ] Create `QuellColors.swift` with all color tokens from the brief, as Color extensions
-- [ ] Create `QuellTypography.swift` with all type tokens as Font extensions
-- [ ] Create `QuellSpacing.swift` with spacing constants
-- [ ] Create `QuellMotion.swift` with animation/duration constants
-- [ ] Create a small `TokenPreview` SwiftUI view that displays every color, font, and spacing value side by side
-- [ ] **Visual checkpoint:** the token preview screen renders all tokens correctly. Bailey looks at it and approves the palette in context.
+- [x] Create `Quell/DesignSystem/` folder in project
+- [x] Create `QuellColors.swift` with all color tokens from the brief, as Color extensions
+- [x] Create `QuellTypography.swift` with all type tokens as Font extensions
+- [x] Create `QuellSpacing.swift` with spacing constants
+- [x] Create `QuellMotion.swift` with animation/duration constants
+- [x] Create a small `TokenPreview` SwiftUI view that displays every color, font, and spacing value side by side
+- [x] **Visual checkpoint:** the token preview screen renders all tokens correctly. Bailey looks at it and approves the palette in context.
 
 ### Slice 0.4: App shell and first real screen
 

@@ -8,27 +8,28 @@
 
 **Phase 0: Foundation**
 
-Slices 0.1 (pre-flight setup) and 0.2 (Xcode project creation) are complete. Now actively in Slice 0.3 (design token system).
+Slices 0.1, 0.2, and 0.3 are complete. Next up: Slice 0.4 (App shell + first real screen — `PlaceholderHomeView`).
 
 ## Last Session Summary
 
-Pre-flight work done outside of Claude sessions: Xcode installed, Apple ID signed in, GitHub repo set up, Xcode project created at `Quell/Quell.xcodeproj`, `.gitignore` in place, initial commits pushed. Planning files (`QUELL_PROJECT_BRIEF.md`, `MEMORY.md`, `TASKS.md`) live at project root.
+Built out the full design token system in `Quell/Quell/DesignSystem/`: `QuellColors.swift`, `QuellTypography.swift`, `QuellSpacing.swift`, `QuellMotion.swift`, plus a `TokenPreview` SwiftUI view that renders every token in context. Rebuilt the color palette mid-slice against a bioluminescent-ocean reference image (10 unique colors, two families: cool Moon+Glow, warm Ember+Dawn). Wired Fraunces (display) and Geist (UI/body) from Google Fonts as variable .ttf files in the bundle. `QuellApp.swift` currently launches into `TokenPreview()` as the visual checkpoint.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 0.3: Design token system.** Build out `Quell/DesignSystem/` with `QuellColors.swift`, `QuellTypography.swift`, `QuellSpacing.swift`, `QuellMotion.swift`, then a `TokenPreview` SwiftUI view that renders every token side by side. Visual checkpoint: Bailey looks at the preview screen and approves the palette in context.
+**Slice 0.4: App shell + first real screen.** Create `PlaceholderHomeView` showing the word "quell" in `quellDisplay` (Fraunces Light), centered on `quellMidnight`, with a subtle fade-in on appear. Replace `TokenPreview()` in `QuellApp.swift` with this new view as the actual root.
 
 ## Where We Left Off
 
 Repo state:
-- Xcode project exists at `Quell/Quell.xcodeproj`
-- `.gitignore` configured
-- Planning files committed at project root
-- No design system code yet
+- Design system tokens shipped and rendering correctly in TokenPreview
+- Fraunces and Geist fonts bundled and registered (UIAppFonts in Info.plist)
+- `QuellApp.swift` temporarily points at `TokenPreview()` — to be replaced by `PlaceholderHomeView` in Slice 0.4
+- Project still has macOS in Supported Destinations (caused a UIKit build error during font debug); needs narrowing to iPhone-only as a small cleanup before Phase 0 closes
+- Two reference images at repo root are now `.gitignore`d
 
-Next concrete action: Create the `Quell/DesignSystem/` group and start with `QuellColors.swift` (Color extensions for every token in the brief).
+Next concrete action: Build `PlaceholderHomeView` per Slice 0.4. Also: narrow Supported Destinations to iPhone (Xcode UI step Bailey does).
 
 ## Open Questions
 
@@ -45,6 +46,9 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 (Update as we go.)
 
 - Color palette derived from a real reference image rather than guessed. Roles and rules are explicit, so future decisions about where to use color have a clear framework.
+- Design system token files (colors, typography, spacing, motion) are in place. All call sites can reference `.quellMidnight`, `.quellBody`, `.quellSpace4`, `.quellEaseGentle()` etc. without hard-coded values.
+- Fraunces and Geist render correctly on iOS Simulator. Variable fonts, family-name-only, weight applied via `.weight(...)`.
+- `TokenPreview` is the current visual checkpoint and shows the full palette/type/spacing/motion language in one screen.
 
 ## What's Not Working
 
@@ -62,6 +66,7 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 
 Most recent first. Move to the brief's Decisions Log when stable.
 
+- Fraunces and Geist sourced as variable .ttf files from their official GitHub repos (googlefonts/fraunces, vercel/geist-font), bundled in `Quell/Quell/Fonts/`, and registered via a project `Info.plist` containing `UIAppFonts`. SwiftUI calls use family name + `.weight(...)`. Verified rendering on iOS Simulator.
 - Color palette rebuilt against a bioluminescent-ocean reference image. Brand visual concept shifted from "still water at dusk" to "bioluminescent ocean at twilight." Palette is now organized into bases, text, cool family (Moon + Glow), and warm family (Ember + Dawn). Each color has a defined role and rule. quellCalm and quellAlert are now aliases of Moon and Ember rather than independent colors. Total unique colors: 10.
 - Display font: Fraunces. UI/body font: Geist. Both Google Fonts, both free, both variable.
 - Confirmed iOS 17.0 minimum target (locked in at Xcode project creation).
@@ -76,10 +81,25 @@ Quell/
 ├── TASKS.md
 ├── .gitignore
 └── Quell/
-    └── Quell.xcodeproj
+    ├── Quell.xcodeproj
+    └── Quell/
+        ├── QuellApp.swift              (root view: TokenPreview() — temporary)
+        ├── ContentView.swift           (default template, unused)
+        ├── Item.swift                  (default SwiftData template, unused)
+        ├── Info.plist                  (UIAppFonts registration)
+        ├── Assets.xcassets/
+        ├── DesignSystem/
+        │   ├── QuellColors.swift
+        │   ├── QuellTypography.swift
+        │   ├── QuellSpacing.swift
+        │   ├── QuellMotion.swift
+        │   └── TokenPreview.swift
+        └── Fonts/
+            ├── Fraunces.ttf
+            └── Geist.ttf
 ```
 
-Will expand as we build out the design system and screens.
+Will expand as we build out screens. `ContentView.swift` and `Item.swift` are leftover from the SwiftUI App template and will be deleted once `PlaceholderHomeView` lands.
 
 ## Notes for Next Session
 
