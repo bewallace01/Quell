@@ -9,9 +9,7 @@ struct PlaceholderHomeView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
-            Text("quell")
-                .font(.quellDisplay)
-                .foregroundStyle(Color.quellCream)
+            BreathingShape()
                 .opacity(visible ? 1 : 0)
         }
         .onAppear {

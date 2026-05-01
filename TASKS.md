@@ -72,11 +72,13 @@
 
 ### Slice 1.1: Breathing shape
 
-- [ ] Create `BreathingShape.swift` — a custom SwiftUI view
-- [ ] Render a soft circle/orb using a radial gradient from `quellMoon` center to `quellMidnight` edge
-- [ ] Animate scale and opacity in a 4s inhale / 6s exhale loop using `quellEaseSlow`
-- [ ] Make sure the animation is continuous and never jarring
-- [ ] **Visual checkpoint:** stare at it for 30 seconds. Does it feel calming or annoying? Adjust until calming.
+- [x] Create `BreathingShape.swift` — a custom SwiftUI view (lives in `Quell/Quell/Components/`)
+- [x] Render a soft circle/orb using a radial gradient: ember (0.0) → dawn (0.22) → moon (0.5) → midnight (1.0). Stops weighted so the warm core lives inside ~22% of the radius and blue dominates from 50% out
+- [x] Animate scale (0.72 → 1.05) and opacity (0.5 → 0.95) in a 4s inhale / 6s exhale loop using `quellEaseGentle`, with a 0.4s hold at peak and 1.2s rest at trough
+- [x] Apply `.blur(radius: 6)` before `.scaleEffect` so the orb is slightly more diffuse at peak inhale and more defined at trough
+- [x] Make sure the animation is continuous and never jarring
+- [x] **Visual checkpoint:** stare at it for 30 seconds. Does it feel calming or annoying? Adjust until calming.
+- [x] Wire `BreathingShape` into `PlaceholderHomeView` as the home centerpiece (replaces the "quell" wordmark)
 
 ### Slice 1.2: "Right now i'm…" prompt
 
