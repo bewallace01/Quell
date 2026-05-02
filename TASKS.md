@@ -296,20 +296,21 @@
 
 ### Slice 7.1: Recording UI
 
-- [ ] Soft recording interface, max 60 seconds per note
-- [ ] Up to 5 notes stored locally
-- [ ] Title + date metadata
+- [x] `RecordVoiceNoteView` — state machine (initial → recording → review → denied). `VoiceRecorder` private helper wraps `AVAudioRecorder` (AAC, 44.1kHz mono, 60s hard cap via `record(forDuration:)`). Permission via `AVAudioApplication.requestRecordPermission()` requested only at moment of need.
+- [x] Up to 5 notes stored locally. Audio files in `Documents/`, metadata in `UserDefaults` via `VoiceNoteStore`. Over-cap message: "five saved — delete one to record more."
+- [x] Date metadata (auto-generated, displayed as "may 2"). Title editing skipped for v1 — date alone is enough.
 
 ### Slice 7.2: Playback during urges
 
-- [ ] Surface during co-regulation if user has notes saved
-- [ ] Randomized selection
-- [ ] User can skip without judgment
+- [x] `CoRegulationView` shows a "your voice" stone above stay/skip-ahead **only when `store.hasNotes`**. Tap plays a random note inline via `AVAudioPlayer`; orb keeps animating, Wren keeps rotating. Label flips to "stop" while playing; auto-stops at audio end or on advance/disappear.
+- [x] Random selection via `store.random` (`notes.randomElement()`).
+- [x] Skip without judgment — same "stop" affordance + tap "skip ahead" cancels playback before advancing.
 
 ### Slice 7.3: Management
 
-- [ ] List, listen, delete, re-record
-- [ ] No cloud sync. Local only.
+- [x] `VoiceNotesListView` — reached from a subtle "future-you." link below the home stones (`quellWhisper` `quellCaption`). Each row: date, "play" / "stop" toggle, "delete". "record new" stone shows when `canAddMore`.
+- [x] Local-only. UserDefaults + Documents/. No cloud sync.
+- [x] Re-record: deferred. v1 is delete-then-record-new (the "redo" affordance during recording covers in-session redo).
 
 ---
 

@@ -7,5 +7,7 @@
 		<string>Fraunces.ttf</string>
 		<string>Geist.ttf</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Quell uses the microphone so you can record voice notes for future-you. Recordings stay on your device.</string>
 </dict>
 </plist>

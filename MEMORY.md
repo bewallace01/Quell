@@ -12,17 +12,15 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slice 2.6 + all of Phase 5 in one push, jumping ahead in plan order because Bailey wanted velocity ("can we speed things up... at this rate building an app is going to take forever") and a more useful app ("what else can we do to make this a useful app that actually does something").
+Closed all of Phase 7 (Future Self Voice Notes). Jumped ahead in plan order again because Bailey wanted high-impact features. New: `VoiceNoteStore` (UserDefaults + Documents/, max 5 notes, date metadata only — title editing skipped), `RecordVoiceNoteView` with a 4-state machine (initial → recording → review → denied) backed by an `AVAudioRecorder` wrapper, `VoiceNotesListView` for play/delete management, subtle "future-you." link on the home in `quellWhisper`. Co-regulation surfaces a "your voice" stone above stay/skip-ahead only when `store.hasNotes`, plays a random note inline via `AVAudioPlayer` while the orb and Wren keep going. Mic permission via `AVAudioApplication.requestRecordPermission()` requested only at the moment of need. `NSMicrophoneUsageDescription` added to Info.plist.
 
-**Slice 2.6 redesign.** First-draft 2.6 had three text-input prompts (trigger / what helped / future-you) backed by a `DebriefStore` (UserDefaults). Bailey called it: "the last thing i'd want is to answer questions." Scrapped the prompts entirely. Renamed `DebriefView` → `ClosingLineView` and parameterized the line, so it's reusable. Wave Check `.smaller` now routes to `ClosingLineView(line: "thanks for showing up.")` for 3.5s, then home. Phase 8 Pattern Detective will capture metadata (time, tool, outcome) without asking. `DebriefStore.swift` deleted.
-
-**Phase 5 — Eat Anyway, all four slices.** The Fork's "Body" branch now routes to `EatAnywayEntryView` ("sounds good. / want to slow it down?") with two stones: "yes, walk me through" → `MindfulEatView` (4 guidance lines + 10-min ambient breathing timer, tap-to-end), and "just eat. i'll check back." → `JustEatView` (ambient breathing + scheduled 20-min local notification "checking back. still here when you want me."). Both close via `ClosingLineView(line: "still here.")`. Permission for notifications requested only when JustEat starts; denial is silent. Long-press-on-Wren access point deferred to Phase 3.2 (Wren has no visual avatar yet).
+Combine import gotcha: `@StateObject` requires `import Combine` explicitly in iOS 17 (it doesn't transit through SwiftUI). Caught on first build. Worth knowing for any future ObservableObject usage.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: Phase 2 closeout (vibes check) + Phase 5 stare-test on Bailey, then pick the next high-value direction.** Strongest candidates ranked: Phase 7 Future Self Voice Notes (deepest emotional hook); Phase 4 Body route + Sensory Swaps (concrete tools, ~50 hand-curated entries); Phase 6 fill-in mood protocols (Lonely / Tired / Bored / Numb / Rage); local notifications for daily check-ins.
+**Open: pick next high-value direction.** Phase 7 just shipped; Phase 5 + Phase 7 both want stare-tests on Bailey. Strongest remaining candidates: Phase 6 fill-in mood protocols (Lonely / Tired / Bored / Numb / Rage — completes the urge flow, lots of code reuse); Phase 4 Body route + Sensory Swaps (replaces the current direct Body→Eat-Anyway shortcut with sensory-icon picker + 10-15 hand-curated swap entries); local notifications for daily check-ins.
 
 ## Where We Left Off
 
@@ -63,6 +61,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - The Fork reads as a real choice with three labeled shapes in a triangle, not as overwhelming. Single-tap commits with a soft haptic + brief glow give tactile confirmation without making the user "discover" what each shape means. Bailey's checkpoint: "good, lets move on."
 - The Wave Check slider is the literal wave. Two stroked sine-wave layers (`quellMoon` primary + softer `quellGlow` at phase offset) whose amplitude responds live to the user's drag. Dragging toward "smaller" calms the wave; toward "bigger" amplifies it. The metaphor is the answer — the user reports the wave's state by *being* the wave's state. Bailey's checkpoint: "looks good."
 - Eat Anyway is wired end-to-end via Body → entry → mindful or just-eat → "still here." close. Notifications for the just-eat 20-min ping work via UNUserNotificationCenter; permission requested only at the moment of need. Bailey's signature feature is real.
+- Voice notes are recordable and play back inline during co-regulation. Max 5, local-only, mic permission requested at moment of need. The deepest emotional hook in the brief is now real — your sober self can record a note for your future-overwhelmed self.
 
 ## What's Not Working
 
@@ -79,6 +78,14 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 7 (Future Self Voice Notes):**
+
+- **`@StateObject` on `ObservableObject` requires `import Combine` explicitly** in iOS 17 — SwiftUI doesn't transitively re-export it. Build fails with "type does not conform to ObservableObject" + cryptic Combine subscript errors. Add the import.
+- **Permission requests at the moment of need, not at app launch.** Mic permission is requested when the user taps "record" inside `RecordVoiceNoteView` (same pattern as the JustEat notification permission in Phase 5). Denial routes to a soft "microphone access is off, you can turn it on in settings." screen with an "ok" stone. Pattern reusable for any future permission (camera, location, etc.).
+- **`Storage/` folder is the new home for any data layer code.** Currently `VoiceNoteStore.swift`. When Phase 8 (Pattern Detective) needs storage, add files here. Each store is a `@MainActor final class ObservableObject` with a `static let shared` and UserDefaults-backed save/load.
+- **Audio session categories matter.** `RecordVoiceNoteView` uses `.playAndRecord` with `.defaultToSpeaker` (so playback is loud, not earpiece). `VoiceNotesListView` and `CoRegulationView` use `.playback` (no recording). When adding more audio surfaces, set the right category before playing/recording.
+- **Inline playback in `CoRegulationView` deliberately doesn't pause the breath/Wren.** The user hears their voice while the orb keeps animating and phrases keep rotating. Continuity matters in co-regulation; an audio-only modal would have broken it.
 
 **Slice 2.6 + Phase 5 (Debrief redesign + Eat Anyway):**
 
@@ -186,7 +193,11 @@ Quell/
         │   ├── ClosingLineView.swift
         │   ├── EatAnywayEntryView.swift
         │   ├── MindfulEatView.swift
-        │   └── JustEatView.swift
+        │   ├── JustEatView.swift
+        │   ├── RecordVoiceNoteView.swift
+        │   └── VoiceNotesListView.swift
+        ├── Storage/
+        │   └── VoiceNoteStore.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf

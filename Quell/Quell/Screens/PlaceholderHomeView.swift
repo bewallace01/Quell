@@ -14,6 +14,8 @@ struct PlaceholderHomeView: View {
         case eatMindful
         case eatJust
         case closingLine(String)
+        case voiceNotes
+        case voiceRecord
     }
 
     @State private var orbVisible = false
@@ -60,6 +62,15 @@ struct PlaceholderHomeView: View {
                         }
                     case .closingLine(let line):
                         ClosingLineView(line: line, onComplete: dismiss)
+                    case .voiceNotes:
+                        VoiceNotesListView(
+                            onRecord: { route(to: .voiceRecord) },
+                            onDismiss: dismiss
+                        )
+                    case .voiceRecord:
+                        RecordVoiceNoteView {
+                            route(to: .voiceNotes)
+                        }
                     }
                 }
                 .transition(.opacity)
@@ -95,6 +106,18 @@ struct PlaceholderHomeView: View {
                     WordStone(label: "Need company") { select("Need company") }
                 }
                 .padding(.horizontal, .quellSpace7)
+                .opacity(stonesVisible ? 1 : 0)
+
+                Button {
+                    route(to: .voiceNotes)
+                } label: {
+                    Text("future-you.")
+                        .font(.quellCaption)
+                        .foregroundStyle(Color.quellWhisper)
+                        .padding(.vertical, .quellSpace3)
+                        .padding(.horizontal, .quellSpace5)
+                }
+                .buttonStyle(.plain)
                 .opacity(stonesVisible ? 1 : 0)
             }
         }
