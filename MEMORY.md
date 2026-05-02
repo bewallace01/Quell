@@ -12,17 +12,15 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slice 2.1. Shipped `CoRegulationView` and a new `quellAbyss` color token (#040714 — deeper than `quellMidnight`, the held interior of the urge flow). Refactored `PlaceholderHomeView` routing from a `String?` to a typed `Destination` enum (`.stone(String)` for placeholders, `.coRegulation` for the new view) so further phase 2-6 destinations can be added cleanly. "In it" routes to the co-regulation; the other three stones still go to placeholders.
+Closed Slice 2.2. Shipped `WrenLine.swift` in `Components/` — a styled text component that owns its own phrase rotation via `.task`. Renders one phrase at a time in `quellDisplay`, cross-fades to the next every 22 seconds (~2 full breath cycles) using `quellEaseSlow` over `quellDurSlow`. CoRegulationView now passes a phrase list and interval; the static "i'm here.\nbreathe with me." line is gone.
 
-The co-regulation flow: cross-fade dissolves the home into the `quellAbyss` field. Then "i'm here.\nbreathe with me." in `quellDisplay` fades in at t=1.0s (forced two-line layout, multilineTextAlignment(.center)). Then `BreathingShape(size: 280)` — 40% larger than home — fades in at t=1.6s. Then 8 seconds of held silence. Then "stay" and "skip ahead" WordStones fade in at t=8.0s. "stay" hides the actions and re-surfaces them after 12s (so the user isn't stuck without an exit); "skip ahead" returns to home (will route to Fork in 2.3).
-
-Bonus fix during this slice: `WordStone` was truncating to "st…" when used in an HStack context (CoRegulationView's actions). Root cause was no `fixedSize` constraint on the Text — added `.fixedSize(horizontal: true, vertical: false)` so the stone is always the natural width of its label regardless of parent constraints.
+First-draft phrases were therapy-stock affirmations ("i see you", "you're not alone in this", "your body is doing the work") and read as cheesy — Bailey called it. Rewrote toward friend-on-the-floor voice: observational, plainspoken, dropped self-announcing "i" frames. Final set: `still here.` / `yeah, this is hard.` / `no rush.` / `we can wait.` / `it'll pass. it always does.` / `just this.` This is the principle for future Wren writing: less calm-presenter, more real-friend-who's-been-here.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 2.2: Wren's first voice (text-based).** Create `WrenLine.swift` — a styled text component for Wren's voice. Implement a small set of co-regulation phrases that rotate, displayed one at a time during the breathing loop with slow fades between phrases. The single static line currently in `CoRegulationView` ("i'm here.\nbreathe with me.") becomes one of several. Visual checkpoint: read the phrases as a stranger would — do they feel warm or clinical?
+**Slice 2.3: The Fork.** Create `ForkView.swift` — three soft shapes in a triangle layout (top: Body, lower left: Mood, lower right: Don't know). Tap reveals label, second tap commits. Each fork option fades in over 400ms (matches `quellDurMid`). Visual checkpoint: does the three-option layout feel like a real choice or overwhelming? Test with no labels first. Also: re-route `CoRegulationView`'s "skip ahead" to land on the Fork instead of dismissing to home, and extend the `Destination` enum with a `.fork` case.
 
 ## Where We Left Off
 
@@ -58,7 +56,8 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - "right now i'm…" prompt at `quellTitle` (24pt) reads as a gentle invitation. The lowercase + horizontal ellipsis carries the brand voice (matches "i'm here. breathe with me." in Slice 2.1's spec). 36pt was too forward; 24pt is the sweet spot for a question that invites rather than demands.
 - Word-stones feel like words, not buttons. Fraunces light at 20pt with no chrome reads as language; the soft-impact haptic + glow on tap acknowledges without snapping. Bailey's gut check on the visual checkpoint: "looks good."
 - The home → destination → home dissolve reads as water. Cross-fade with no back-stacking, no slide, no chrome — just the surface dissolving from a question to a held word and back. Bailey's checkpoint: "good."
-- The co-regulation field reads as a deeper interior than the home. The `quellAbyss` background is barely darker than `quellMidnight` numerically, but combined with the larger orb, the two-line "i'm here. / breathe with me." prompt, and the 8-second held silence, it lands as descent — like dimming the lights to be present with someone. Bailey's checkpoint: "good."
+- The co-regulation field reads as a deeper interior than the home. The `quellAbyss` background is barely darker than `quellMidnight` numerically, but combined with the larger orb, the held silence, and Wren's rotating phrases, it lands as descent — like dimming the lights to be present with someone. Bailey's checkpoint: "good."
+- Wren's voice is friend-on-the-floor, not calm-presenter. First draft of co-regulation phrases used therapy-stock affirmations ("i see you", "your body is doing the work") and read cheesy. Rewrote to observational/plainspoken: `yeah, this is hard.` / `no rush.` / `it'll pass. it always does.` Less self-announcing, fewer "i" frames, no instruction.
 
 ## What's Not Working
 
@@ -75,6 +74,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 2 — Slice 2.2 (Wren's first voice):**
+
+- **Wren is friend-on-the-floor, not calm-presenter.** The first draft of co-regulation phrases used therapy-stock affirmations ("i see you", "you're not alone in this", "your body is doing the work") and Bailey called them cheesy. The voice principle that emerged: observational over declarative, plainspoken over poetic, fewer self-announcing "i" frames, no instruction. Use as a guide for all future Wren writing (Phase 2.4 anxious protocol, Phase 5 eat anyway, etc.).
+- **Phrase rotation cadence: 22s ≈ 2 breath cycles.** Each phrase has time to land before transitioning. Fade is `quellDurSlow` (0.8s) — the existing slow tier — and reads as "slow enough" so far. If a future protocol screen wants slower phrase fades, consider adding a `quellDurSlow2` or similar.
+- **`WrenLine` owns its own rotation.** Component takes a `phrases: [String]` and an `interval: Duration`, runs a `while !Task.isCancelled` loop in `.task`. Reusable for any Wren-voiced screen. When CoRegulationView is dismissed, the task is cancelled cleanly.
+- **First phrase is deterministic** (always "still here." for co-reg). The user gets a consistent landing each time they enter the urge flow.
 
 **Phase 2 — Slice 2.1 (Co-regulation screen):**
 
@@ -136,7 +142,8 @@ Quell/
         │   └── TokenPreview.swift
         ├── Components/
         │   ├── BreathingShape.swift
-        │   └── WordStone.swift
+        │   ├── WordStone.swift
+        │   └── WrenLine.swift
         ├── Screens/
         │   ├── PlaceholderHomeView.swift
         │   ├── StoneDestinationView.swift

@@ -130,11 +130,11 @@
 
 ### Slice 2.2: Wren's first voice (text-based)
 
-- [ ] Create `WrenLine.swift` — a styled text component for Wren's voice
-- [ ] Implement a small set of co-regulation phrases that rotate
-- [ ] Phrases display one at a time during the breathing loop
-- [ ] Slow fade between phrases
-- [ ] **Visual checkpoint:** read the phrases as a stranger would. Do they feel warm or clinical?
+- [x] Create `WrenLine.swift` in `Quell/Quell/Components/` — a styled text component for Wren's voice. Renders one phrase at a time in `quellDisplay` (Fraunces 36pt light), `quellCream`, multilineTextAlignment center. Component owns its own rotation via `.task`.
+- [x] Implement a small set of co-regulation phrases that rotate. Initial set: `still here.` / `yeah, this is hard.` / `no rush.` / `we can wait.` / `it'll pass. it always does.` / `just this.` First draft used therapy-stock affirmations (`i see you`, `your body is doing the work`, etc.) but they read as cheesy; rewrote toward friend-on-the-floor voice — observational, plainspoken, no self-announcing "i" frames.
+- [x] Phrases display one at a time during the breathing loop. Interval: 22 seconds (~2 full breath cycles of 11.6s).
+- [x] Slow fade between phrases via `quellEaseSlow` over `quellDurSlow` (0.8s).
+- [x] **Visual checkpoint:** read the phrases as a stranger would. Do they feel warm or clinical?
 
 ### Slice 2.3: The Fork
 
