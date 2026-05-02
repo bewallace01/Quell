@@ -147,21 +147,23 @@
 
 ### Slice 2.4: Mood route — Anxious protocol
 
-- [ ] Mood tap → six word-bubbles: Anxious, Lonely, Tired, Bored, Numb, Rage
-- [ ] Anxious tap → 2-3 minute physiological sigh + grounding exercise
-- [ ] Build the protocol screen with breathing pacing, gentle text guidance
-- [ ] Include a "this isn't helping, try something else" option that returns to the Fork
-- [ ] **Visual checkpoint:** do the full protocol. Does it actually feel like it would help during real anxiety?
+- [x] `MoodView.swift` in `Quell/Quell/Screens/`. Six `WordStone`s in a 2×3 `LazyVGrid` (Anxious / Lonely / Tired / Bored / Numb / Rage), `quellAbyss` background, header "what is it?" in `quellTitle`. `MoodChoice` enum with rawValue labels. Single-tap commits.
+- [x] Anxious tap routes to `AnxiousProtocolView.swift` — `BreathingShape(size: 280)` + `WrenLine` rotating 6 protocol phrases on a 30s interval (slower than co-reg's 22s for more reflective space). Phrases mix physiological-sigh guidance and grounding cues: `double inhale through your nose.` / `long exhale through your mouth.` / `again. another sigh.` / `feel your feet on the floor.` / `name three things you can see.` / `the spike is coming down.`
+- [x] Breath visual reuses default `BreathingShape` timing — Wren's text does the actual sigh-pattern cueing. Parameterizing `BreathingShape` to support a literal sigh visual (double-inhale-long-exhale shape) was a bigger lift; deferred until stare-test feedback says it's needed.
+- [x] "this isn't helping" `WordStone` fades in at t=1.5s, persistent. Tap routes back to Fork via `onTryElse`.
+- [x] Routing: extended `Destination` enum with `.mood` and `.anxiousProtocol`. Other 5 mood options (Lonely / Tired / Bored / Numb / Rage) route to `StoneDestinationView` placeholders (Phases 6.1–6.5 will replace each).
+- [x] **Visual checkpoint:** do the full protocol. Does it actually feel like it would help during real anxiety?
 
 ### Slice 2.5: The Wave Check
 
-- [ ] After protocol, soft transition to Wave Check screen
-- [ ] One horizontal slider: bigger ← same → smaller, no numbers
-- [ ] Three branches based on result
-- [ ] If smaller: brief acknowledgment, optional debrief
-- [ ] If same: "want to try a different tool?" → back to Fork
-- [ ] If bigger: "let's escalate" → Co-pilot mode placeholder + crisis resources visible
-- [ ] **Visual checkpoint:** the slider should feel like a feeling, not a survey question.
+- [x] `AnxiousProtocolView` gets an `onAdvance` callback and a `duration: Duration = .seconds(120)` parameter. After 120s the protocol auto-routes to Wave Check via `Task { try? await Task.sleep(for: duration); onAdvance() }`. (For dev testing the auto-advance path, temporarily lower duration to ~15s.)
+- [x] `WaveCheckView.swift` in `Screens/`. Background `quellMidnight` (lighter than `quellAbyss` — surfacing from the urge-flow interior). Wren prompt: "where is it now?" `SoftSlider` (custom component, see below) for the bigger ← same → smaller axis. Endpoint labels "bigger" / "smaller" in `quellWhisper`, no numbers.
+- [x] `WaveResult` enum (`.bigger` / `.same` / `.smaller`). On slider release, value is bucketed (<0.33 = bigger, ≥0.67 = smaller, else same), a brief Wren result line fades in (`okay. we can get more help.` / `let's try something else.` / `you're still here. nice work staying.`) and shows for 2.5s, then `onComplete(result)` fires.
+- [x] Branches: `.smaller` → home (debrief is Slice 2.6), `.same` → Fork, `.bigger` → `CoPilotPlaceholderView`.
+- [x] `CoPilotPlaceholderView.swift` v1: `quellAbyss` background, "let's escalate." in `quellDisplay`, `WordStone`s for "988 — call" (taps `tel:988` via `openURL`) and "back to home". NAED helpline excluded from v1 — Phase 10.3 builds crisis resources properly with verified numbers.
+- [x] `SoftSlider.swift` in `Components/` — custom soft slider with the track rendered as an actual wave. Default iOS `Slider` was too utilitarian; flat capsule + orb thumb still didn't sell the metaphor. Track is now two stroked sine-wave `Path`s (Wave shape with `animatableData`): a primary `quellMoon` line at full amplitude and a softer `quellGlow` line at 70% amplitude offset by π/3 phase for layered depth. Wave amplitude responds live to slider value: `maxAmplitude * (1 - value)`, so dragging toward "smaller" flattens the wave and dragging toward "bigger" amplifies it. Thumb is 28pt with `quellGlow`→`quellMoon` radial gradient, slides horizontally on the centerline, scales to 1.1 + brighter glow shadow during drag. 60pt touch area to give the wave room. `DragGesture(minimumDistance: 0)` so tap-anywhere on the track also commits to that position.
+- [x] Routing: extended `Destination` enum with `.waveCheck` and `.coPilot`.
+- [x] **Visual checkpoint:** the slider should feel like a feeling, not a survey question.
 
 ### Slice 2.6: The Debrief
 
@@ -465,6 +467,7 @@ Things we deliberately deferred. Revisit only after launch.
 - Android version
 - iPad-optimized layouts
 - Apple Watch companion (only if it can be done without violating ED safety)
+- Home-screen widget — surface a small breathing orb (slow pulse) or a single rotating Wren line as a daily presence on the iOS home screen. Tap routes straight into "In it" co-regulation. Fits the "always-accessible during urge moments" goal: moves support to the surface where the user's eye already lives. Requires a WidgetKit extension target and possibly an App Group for shared state.
 
 ---
 

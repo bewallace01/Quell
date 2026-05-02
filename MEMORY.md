@@ -12,17 +12,21 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slice 2.3. Shipped `ForkView.swift` in `Screens/` — three soft circular shapes in a triangle layout (Body top, Mood lower-left, Don't know lower-right) on `quellAbyss`. Each shape is a `quellMoon` → `quellMidnight` radial gradient, 100pt diameter, slight blur. Routing: extended `Destination` enum with `.fork`; `CoRegulationView`'s "skip ahead" now routes there (renamed `onExit` → `onAdvance`); each Fork commit routes to a `StoneDestinationView` placeholder for now (Phases 4 and 6 will replace those).
+Closed Slices 2.4 and 2.5 together. The urge flow now runs end-to-end on the "In it" path: home → co-regulation (8s held silence + rotating Wren phrases) → "skip ahead" → Fork → Mood (six word-bubbles) → Anxious → 2-minute protocol with rotating Wren guidance for the physiological sigh + grounding → auto-advance to Wave Check → drag the wave slider → branch to home (smaller), Fork (same), or Co-pilot escalation with 988 (bigger).
 
-Deviated from the slice spec on the interaction: shipped two-tap discovery first (tap reveals label, second tap commits), Bailey said it was "kind of a lot to have to tap each shape to reveal," rewrote to labels-always-visible + single-tap commit. Press feedback: scale to 0.94 + soft-impact haptic + brief `quellGlow` shadow.
+Slice 2.4 added `MoodView` (six `WordStone`s in a 2×3 grid with header "what is it?") and `AnxiousProtocolView` (`BreathingShape(size: 280)` + `WrenLine` rotating six protocol phrases on a 30s interval — physiological-sigh and grounding cues mixed). The breath visual reuses default `BreathingShape` timing rather than a literal sigh-pattern visual; Wren's text does the cueing. Parameterizing `BreathingShape` to support a true sigh visual is deferred until stare-test feedback says it's needed.
 
-Saved a feedback memory: "Prefer minimum friction in feel-driven contexts." This is the second time in close succession (Slice 2.2 cheesy phrases, Slice 2.3 two-tap discovery) where I shipped a richer/more-deliberate interaction or copy register and Bailey corrected toward simpler/lower-friction. The pattern: in urge-flow surfaces, friction violates the brand's "no chrome, just presence" voice.
+Slice 2.5 added `WaveCheckView`, `CoPilotPlaceholderView`, and `SoftSlider`. The slider went through three iterations: (1) iOS default `Slider` with `quellGlow` tint — too utilitarian; (2) custom flat-capsule track with `quellGlow`→`quellMoon` orb thumb — better but didn't sell the "wave" metaphor; (3) **wave-as-track** — two stroked sine-wave Paths (primary `quellMoon` at full amplitude, softer `quellGlow` at 70% amplitude with π/3 phase offset for layered depth) where the amplitude responds live to slider value via `maxAmplitude * (1 - value)`. Dragging toward "smaller" flattens the wave; toward "bigger" amplifies it. The user can see themselves calming the wave (or not).
+
+`AnxiousProtocolView` now auto-advances to Wave Check after `duration: Duration = .seconds(120)` (2 min). Bigger result routes to `CoPilotPlaceholderView` with a "988 — call" stone using `tel:988` via the `openURL` environment; NAED helpline excluded from v1 since I don't have a verified number. Phase 10.3 will build crisis resources properly.
+
+Also: jotted a home-screen widget idea into the brief's backlog — a small breathing orb or single rotating Wren line as a daily presence on iOS home screen, tap routes straight into "In it." Bailey raised it organically; not in the v1 scope.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 2.4: Mood route — Anxious protocol.** Two pieces. First: a "mood" word-bubbles screen with six options (Anxious, Lonely, Tired, Bored, Numb, Rage). Second: the Anxious tap routes to a 2-3 minute physiological sigh + grounding exercise — a real protocol screen with breathing pacing and gentle Wren guidance. The protocol must include a "this isn't helping, try something else" option that returns to the Fork. Visual checkpoint: do the full protocol; does it actually feel like it would help during real anxiety?
+**Slice 2.6: The Debrief.** Three skippable prompts after a "smaller" Wave Check result: trigger, what helped, what to tell future-you. Save quietly to local storage (storage formalized in Phase 8 — for 2.6 likely UserDefaults or a simple JSON file). No score, no verdict, just a soft "thanks for showing up" close. Currently `.smaller` Wave Check result routes straight to home; 2.6 inserts the debrief between Wave Check and home.
 
 ## Where We Left Off
 
@@ -61,6 +65,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - The co-regulation field reads as a deeper interior than the home. The `quellAbyss` background is barely darker than `quellMidnight` numerically, but combined with the larger orb, the held silence, and Wren's rotating phrases, it lands as descent — like dimming the lights to be present with someone. Bailey's checkpoint: "good."
 - Wren's voice is friend-on-the-floor, not calm-presenter. First draft of co-regulation phrases used therapy-stock affirmations ("i see you", "your body is doing the work") and read cheesy. Rewrote to observational/plainspoken: `yeah, this is hard.` / `no rush.` / `it'll pass. it always does.` Less self-announcing, fewer "i" frames, no instruction.
 - The Fork reads as a real choice with three labeled shapes in a triangle, not as overwhelming. Single-tap commits with a soft haptic + brief glow give tactile confirmation without making the user "discover" what each shape means. Bailey's checkpoint: "good, lets move on."
+- The Wave Check slider is the literal wave. Two stroked sine-wave layers (`quellMoon` primary + softer `quellGlow` at phase offset) whose amplitude responds live to the user's drag. Dragging toward "smaller" calms the wave; toward "bigger" amplifies it. The metaphor is the answer — the user reports the wave's state by *being* the wave's state. Bailey's checkpoint: "looks good."
 
 ## What's Not Working
 
@@ -77,6 +82,15 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 2 — Slices 2.4 + 2.5 (Mood / Anxious protocol / Wave Check / Co-pilot):**
+
+- **`SoftSlider` ships the wave metaphor literally.** Three iterations to land it: iOS default `Slider` (too utilitarian) → custom flat-track + orb thumb (cleaner but didn't sell the metaphor) → wave-as-track with amplitude responding live to slider value (the answer is the visual). Worth knowing for future "feels like a feeling, not a survey" moments: the metaphor itself can be the interaction, not just decoration around it.
+- **`WrenLine` reused for the Anxious protocol with a slower interval (30s).** Established pattern: phrase rotation interval scales with the screen's emotional register — co-regulation is 22s (~2 breath cycles), the protocol is 30s (more reflective space). Future protocol screens (Phase 6.1–6.5 Lonely/Tired/Bored/Numb/Rage, Phase 5 eat anyway) should pick intervals based on what the user is being asked to do, not a fixed default.
+- **Protocol auto-advance via `Task` + `Task.sleep`.** `AnxiousProtocolView` runs `Task { try? await Task.sleep(for: duration); onAdvance() }` for the 2-min auto-route to Wave Check. The duration is parameterizable so dev testing can use shorter values. Pattern reusable for any time-bounded protocol screen.
+- **`Destination` enum is now 7 cases** (`.stone`, `.coRegulation`, `.fork`, `.mood`, `.anxiousProtocol`, `.waveCheck`, `.coPilot`). Slice 2.6 adds `.debrief`. Phase 6 will add 5 more mood-protocol cases. By the time we hit ~12 cases (likely Slice 6.5), refactor to a router type or `NavigationStack` with a custom transition. Flat enum still readable for now.
+- **Crisis resource numbers must be verified before shipping.** Excluded NAED helpline from `CoPilotPlaceholderView` v1 because I didn't have a verified number. 988 is the Suicide & Crisis Lifeline and is well-known. Phase 10.3 owns proper crisis resources and should pull verified numbers from clinical advisor input before TestFlight.
+- **Home-screen widget jotted into backlog.** Bailey raised it organically: small breathing orb or single rotating Wren line as a daily home-screen presence with tap-to-"In it." Fits the "always-accessible during urge moments" goal. Requires a WidgetKit extension target.
 
 **Phase 2 — Slice 2.3 (The Fork):**
 
@@ -153,12 +167,17 @@ Quell/
         ├── Components/
         │   ├── BreathingShape.swift
         │   ├── WordStone.swift
-        │   └── WrenLine.swift
+        │   ├── WrenLine.swift
+        │   └── SoftSlider.swift
         ├── Screens/
         │   ├── PlaceholderHomeView.swift
         │   ├── StoneDestinationView.swift
         │   ├── CoRegulationView.swift
-        │   └── ForkView.swift
+        │   ├── ForkView.swift
+        │   ├── MoodView.swift
+        │   ├── AnxiousProtocolView.swift
+        │   ├── WaveCheckView.swift
+        │   └── CoPilotPlaceholderView.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf

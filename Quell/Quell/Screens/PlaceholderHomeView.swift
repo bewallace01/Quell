@@ -6,6 +6,10 @@ struct PlaceholderHomeView: View {
         case stone(String)
         case coRegulation
         case fork
+        case mood
+        case anxiousProtocol
+        case waveCheck
+        case coPilot
     }
 
     @State private var orbVisible = false
@@ -29,6 +33,14 @@ struct PlaceholderHomeView: View {
                         CoRegulationView(onAdvance: advanceToFork)
                     case .fork:
                         ForkView(onCommit: commitFork)
+                    case .mood:
+                        MoodView(onCommit: commitMood)
+                    case .anxiousProtocol:
+                        AnxiousProtocolView(onTryElse: advanceToFork, onAdvance: advanceToWaveCheck)
+                    case .waveCheck:
+                        WaveCheckView(onComplete: completeWave)
+                    case .coPilot:
+                        CoPilotPlaceholderView(onDismiss: dismiss)
                     }
                 }
                 .transition(.opacity)
@@ -101,7 +113,42 @@ struct PlaceholderHomeView: View {
 
     private func commitFork(_ choice: ForkChoice) {
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
-            destination = .stone(choice.rawValue)
+            switch choice {
+            case .mood:
+                destination = .mood
+            case .body, .dontKnow:
+                destination = .stone(choice.rawValue)
+            }
+        }
+    }
+
+    private func commitMood(_ choice: MoodChoice) {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            switch choice {
+            case .anxious:
+                destination = .anxiousProtocol
+            case .lonely, .tired, .bored, .numb, .rage:
+                destination = .stone(choice.rawValue)
+            }
+        }
+    }
+
+    private func advanceToWaveCheck() {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            destination = .waveCheck
+        }
+    }
+
+    private func completeWave(_ result: WaveResult) {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            switch result {
+            case .smaller:
+                destination = nil
+            case .same:
+                destination = .fork
+            case .bigger:
+                destination = .coPilot
+            }
         }
     }
 }
