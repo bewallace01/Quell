@@ -120,12 +120,13 @@
 
 ### Slice 2.1: The 60-second co-regulation screen
 
-- [ ] On "In it" tap, fade screen to near-black over 800ms
-- [ ] Display "i'm here. breathe with me." in display font, slow fade-in
-- [ ] Show breathing circle, larger than home screen version
-- [ ] No buttons for first 8 seconds
-- [ ] After 8 seconds, soft "stay" / "skip ahead" buttons fade in
-- [ ] **Visual checkpoint:** time it. Sit through the 8 seconds. Does the pause feel right or punishing?
+- [x] On "In it" tap, route via enum-based `Destination` (`.coRegulation` case in `PlaceholderHomeView`) to a new `CoRegulationView`. Cross-fade via `.transition(.opacity)` with `quellEaseSlow` over `quellDurSlow` (matches the spec's 800ms). Background is the new `quellAbyss` token (#040714) — deeper than `quellMidnight`, the held interior of the urge flow.
+- [x] Display "i'm here.\nbreathe with me." in `quellDisplay` (Fraunces 36pt light) with `multilineTextAlignment(.center)`. Forced two-line layout. Fades in at t=1.0s.
+- [x] Show `BreathingShape(size: 280)` — 40% larger than home's 200pt. Fades in at t=1.6s.
+- [x] No buttons for first 8 seconds.
+- [x] After 8 seconds, "stay" and "skip ahead" `WordStone`s fade in. "stay" hides them and re-surfaces after 12s so the user isn't stuck without an exit; "skip ahead" calls `onExit` (returns to home; will route to Fork in Slice 2.3).
+- [x] Bonus fix during this slice: added `.fixedSize(horizontal: true, vertical: false)` to `WordStone`'s Text so HStack contexts don't truncate the label (was hitting "stay" → "st…").
+- [x] **Visual checkpoint:** time it. Sit through the 8 seconds. Does the pause feel right or punishing?
 
 ### Slice 2.2: Wren's first voice (text-based)
 

@@ -4,6 +4,10 @@ extension Color {
 
     // MARK: - Bases
 
+    /// Deeper than midnight. The held interior of the urge flow — a near-black
+    /// the home dissolves into when the user enters co-regulation.
+    static let quellAbyss = Color(hex: "#040714")
+
     /// Deep night. The silhouette against the sky.
     static let quellMidnight = Color(hex: "#0B1220")
 

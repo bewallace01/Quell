@@ -2,28 +2,36 @@ import SwiftUI
 
 struct PlaceholderHomeView: View {
 
+    private enum Destination: Equatable {
+        case stone(String)
+        case coRegulation
+    }
+
     @State private var orbVisible = false
     @State private var promptVisible = false
     @State private var stonesVisible = false
 
-    @State private var selected: String? = nil
+    @State private var destination: Destination? = nil
 
     var body: some View {
         ZStack {
             home
-                .opacity(selected == nil ? 1 : 0)
-                .allowsHitTesting(selected == nil)
+                .opacity(destination == nil ? 1 : 0)
+                .allowsHitTesting(destination == nil)
 
-            if let word = selected {
-                StoneDestinationView(word: word) {
-                    withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
-                        selected = nil
+            if let dest = destination {
+                Group {
+                    switch dest {
+                    case .stone(let word):
+                        StoneDestinationView(word: word, onDismiss: dismiss)
+                    case .coRegulation:
+                        CoRegulationView(onExit: dismiss)
                     }
                 }
                 .transition(.opacity)
             }
         }
-        .animation(.quellEaseSlow(duration: .quellDurSlow), value: selected)
+        .animation(.quellEaseSlow(duration: .quellDurSlow), value: destination)
     }
 
     private var home: some View {
@@ -70,8 +78,15 @@ struct PlaceholderHomeView: View {
     }
 
     private func select(_ word: String) {
+        let dest: Destination = (word == "In it") ? .coRegulation : .stone(word)
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
-            selected = word
+            destination = dest
+        }
+    }
+
+    private func dismiss() {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            destination = nil
         }
     }
 }

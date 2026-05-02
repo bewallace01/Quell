@@ -22,6 +22,7 @@ struct WordStone: View {
             Text(label)
                 .font(.quellStone)
                 .foregroundStyle(Color.quellCream)
+                .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, .quellSpace5)
                 .padding(.vertical, .quellSpace3)
                 .frame(minWidth: 44, minHeight: 44)

@@ -6,29 +6,34 @@
 
 ## Current Phase
 
-**Phase 1: Home Screen — closeout**
+**Phase 2: Urge Flow**
 
-All four slices (1.1 BreathingShape, 1.2 prompt, 1.3 word-stones, 1.4 placeholder routing) shipped. Phase 1 closeout has two open items, both Bailey's: (1) 60-second cold-launch vibes check, (2) decide on Phase 2 entry.
+Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the real flow, not a placeholder. Phase 1 closeout's vibes check and Phase 2 entry decision were skipped explicitly: Bailey jumped from Slice 1.4 approval directly into Slice 2.1. Working forward through 2.2 (Wren's first voice), 2.3 (Fork), 2.4 (Mood / Anxious protocol), 2.5 (Wave Check), 2.6 (Debrief).
 
 ## Last Session Summary
 
-Closed Slice 1.4. Shipped `StoneDestinationView` — a midnight surface that holds just the chosen word in `.quellDisplay` (Fraunces 36pt light), centered on `quellMidnight`, with the word fading in 0.2s after the surface materializes (moment of held space, then the word arrives). Tap-anywhere dismiss — no chrome, most water-like for a placeholder; will revisit when destinations have real content. Routing uses a state-driven view swap (`@State var selected: String?`) rather than `NavigationStack`, because the default push transition is a slide and customizing it fights the framework. Cross-fade via `.transition(.opacity)` with `quellEaseSlow` over `quellDurSlow`. The home view is opacity-toggled rather than swapped, so its staggered fade-in cadence only plays on first launch; return-from-destination is just an opacity flip.
+Closed Slice 2.1. Shipped `CoRegulationView` and a new `quellAbyss` color token (#040714 — deeper than `quellMidnight`, the held interior of the urge flow). Refactored `PlaceholderHomeView` routing from a `String?` to a typed `Destination` enum (`.stone(String)` for placeholders, `.coRegulation` for the new view) so further phase 2-6 destinations can be added cleanly. "In it" routes to the co-regulation; the other three stones still go to placeholders.
+
+The co-regulation flow: cross-fade dissolves the home into the `quellAbyss` field. Then "i'm here.\nbreathe with me." in `quellDisplay` fades in at t=1.0s (forced two-line layout, multilineTextAlignment(.center)). Then `BreathingShape(size: 280)` — 40% larger than home — fades in at t=1.6s. Then 8 seconds of held silence. Then "stay" and "skip ahead" WordStones fade in at t=8.0s. "stay" hides the actions and re-surfaces them after 12s (so the user isn't stuck without an exit); "skip ahead" returns to home (will route to Fork in 2.3).
+
+Bonus fix during this slice: `WordStone` was truncating to "st…" when used in an HStack context (CoRegulationView's actions). Root cause was no `fixedSize` constraint on the Text — added `.fixedSize(horizontal: true, vertical: false)` so the stone is always the natural width of its label regardless of parent constraints.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Phase 1 Closeout.** Bailey opens the app cold, uses it for 60 seconds, gut-checks: does it feel like Quell? Then decides: ready for Phase 2 (the urge flow)?
+**Slice 2.2: Wren's first voice (text-based).** Create `WrenLine.swift` — a styled text component for Wren's voice. Implement a small set of co-regulation phrases that rotate, displayed one at a time during the breathing loop with slow fades between phrases. The single static line currently in `CoRegulationView` ("i'm here.\nbreathe with me.") becomes one of several. Visual checkpoint: read the phrases as a stranger would — do they feel warm or clinical?
 
 ## Where We Left Off
 
 Repo state:
 - `Quell/Quell/Components/` contains `BreathingShape.swift` and `WordStone.swift`
-- `Quell/Quell/Screens/` contains `PlaceholderHomeView.swift` and `StoneDestinationView.swift`
-- The home flow runs end-to-end on first launch: orb fades in → prompt fades in → stones fade in → tap stone → dissolve to destination → tap to dissolve back. No back-stacking, no visible chrome.
-- All four word-stones route to the same destination type (just the word). Phase 2 will replace the "In it" route with the real co-regulation flow; Phases 3-6 will replace the others.
+- `Quell/Quell/Screens/` contains `PlaceholderHomeView.swift`, `StoneDestinationView.swift`, and `CoRegulationView.swift`
+- New color token `.quellAbyss` in `QuellColors.swift`
+- Routing in `PlaceholderHomeView` uses a typed `Destination` enum
+- `CoRegulationView` shows one static prompt; Slice 2.2 will replace it with a rotating phrase system
 
-Next concrete action: Phase 1 closeout. Bailey does the 60-second cold-launch vibes check and decides on Phase 2. Phase 2 starts with Slice 2.1 (the 60-second co-regulation screen on "In it" tap — fade screen to near-black, "i'm here. breathe with me." in display font, larger breathing circle, 8-second held silence before stay/skip-ahead buttons appear).
+Next concrete action: Slice 2.2 — design `WrenLine.swift` and a small phrase set. The component needs to handle slow cross-fades between phrases. Likely a Timer or breath-cycle-aware rotation. Phrases probably rotate every breath cycle (~11.6s) or every 2-3 cycles. Need to draft 5-7 co-regulation phrases in Wren's voice — warm, present, never clinical.
 
 ## Open Questions
 
@@ -53,6 +58,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - "right now i'm…" prompt at `quellTitle` (24pt) reads as a gentle invitation. The lowercase + horizontal ellipsis carries the brand voice (matches "i'm here. breathe with me." in Slice 2.1's spec). 36pt was too forward; 24pt is the sweet spot for a question that invites rather than demands.
 - Word-stones feel like words, not buttons. Fraunces light at 20pt with no chrome reads as language; the soft-impact haptic + glow on tap acknowledges without snapping. Bailey's gut check on the visual checkpoint: "looks good."
 - The home → destination → home dissolve reads as water. Cross-fade with no back-stacking, no slide, no chrome — just the surface dissolving from a question to a held word and back. Bailey's checkpoint: "good."
+- The co-regulation field reads as a deeper interior than the home. The `quellAbyss` background is barely darker than `quellMidnight` numerically, but combined with the larger orb, the two-line "i'm here. / breathe with me." prompt, and the 8-second held silence, it lands as descent — like dimming the lights to be present with someone. Bailey's checkpoint: "good."
 
 ## What's Not Working
 
@@ -69,6 +75,15 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 2 — Slice 2.1 (Co-regulation screen):**
+
+- **`quellAbyss` color token added** (#040714). Deeper than `quellMidnight` — the held interior of the urge flow. Future use cases: other deep-flow surfaces in Phases 2-6 protocols. The numerical difference from `quellMidnight` is small but the tonal cue lands as "going deeper."
+- **Routing refactored to a typed `Destination` enum** (`.stone(String)` for placeholders, `.coRegulation` for the new view). String-based routing was fine for Slice 1.4's single placeholder type but doesn't scale to Phase 2-6 destinations. Switch is in `PlaceholderHomeView`.
+- **Co-regulation cadence: 1.0s prompt → 1.6s orb → 8.0s held silence → actions.** The 8 seconds is the spec's bar; the cadence inside it stages the field, the voice, then the breath. Long enough to drop in, short enough not to punish. Bailey passed it on the visual checkpoint.
+- **"stay" re-appearance pattern.** "stay" hides the actions and re-surfaces them after 12s via `Task { @MainActor in ... }`. The user can sit indefinitely without being stuck, since this view has no other exit gesture. If the pattern recurs (other protocol screens with held silences), worth extracting.
+- **Two-line forced break for "i'm here. / breathe with me."** Used `\n` rather than letting it wrap. The deliberate break gives Wren two beats — the arrival, then the invitation. Worth knowing for other Wren voice work.
+- **`WordStone` `.fixedSize(horizontal: true, vertical: false)` patch.** Prevents truncation when used in HStack contexts. Was originally fine in the LazyVGrid because cells gave it room; failed in the HStack here. The fix is robust — applies in every context.
 
 **Phase 1 — Slice 1.4 (Placeholder routing):**
 
@@ -124,7 +139,8 @@ Quell/
         │   └── WordStone.swift
         ├── Screens/
         │   ├── PlaceholderHomeView.swift
-        │   └── StoneDestinationView.swift
+        │   ├── StoneDestinationView.swift
+        │   └── CoRegulationView.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf
