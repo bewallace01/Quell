@@ -342,23 +342,26 @@
 
 ### Slice 10.2: Settings
 
-- [ ] Wren tone preference
-- [ ] Notification preferences
-- [ ] Stealth mode toggles
-- [ ] Audio on/off
-- [ ] Haptic on/off
+- [x] `SettingsView` reachable via `settings.` link on home (third in the row alongside `future-you.` and `in a meeting.`).
+- [x] Haptic toggle (`@AppStorage("quell.hapticEnabled")`) wired to `WordStone` — tapCount only increments when enabled, so `.sensoryFeedback` doesn't fire.
+- [x] Audio toggle (`@AppStorage("quell.audioEnabled")`) persisted but not wired — voice notes are user-triggered, no clean "audio off" semantic for v1.
+- [x] Notifications: button opens iOS Settings via `UIApplication.openSettingsURLString` (system-level, not in-app).
+- [x] Reset onboarding (debug section): clears `hasOnboarded` AppStorage flag and dismisses.
+- [ ] Wren tone preference (warmer / quieter) — deferred. Wren's phrase sets are fixed for v1; no content variation to toggle yet.
+- [ ] Stealth mode toggles — deferred. Quick-blur is always-on (shake from anywhere); future toggle could enable disguise mode (Slice 11.2) selectively.
 
 ### Slice 10.3: Crisis resources
 
-- [ ] Always accessible within 2 taps from any screen
-- [ ] NAED helpline, 988, and clear "this app is a supplement to professional care" copy
-- [ ] No shame language
+- [x] `CrisisResourcesView` reachable from Settings → "crisis resources" (2 taps from home), and direct from Wave Check `.bigger` result. `CoPilotPlaceholderView` deleted; consolidated.
+- [x] Three resources, tap-to-action: `988` (Suicide & Crisis Lifeline, `tel:988`), `741741` (Crisis Text Line, `sms:741741&body=HOME`), `911` (immediate danger, `tel:911`).
+- [x] Footer copy: "this app is a supplement to professional care. not a replacement."
+- [ ] NEDA helpline excluded — number not verified. TODO: Bailey confirms NEDA's helpline number, then add to the resource list.
 
 ### Slice 10.4: About + safety
 
-- [ ] About page with philosophy summary
-- [ ] Clinical advisor credit (when secured)
-- [ ] Privacy promise: local-only data
+- [x] `AboutView` reachable from Settings → "about". Layout: "quell." in `quellDisplay`, "no fixing. just presence." in `quellTitle` `quellMoon`, then `quellBody` paragraphs on philosophy / privacy / clinical care / advisor TBD.
+- [x] Privacy promise: "everything you save stays on your device. no cloud sync. no tracking. no analytics. your patterns are yours."
+- [ ] Clinical advisor credit — placeholder ("clinical advisor: tbd."). Update when secured per the brief's Phase 12 plan.
 
 ---
 

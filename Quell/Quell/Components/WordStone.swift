@@ -5,12 +5,13 @@ struct WordStone: View {
     let label: String
     let action: () -> Void
 
+    @AppStorage("quell.hapticEnabled") private var hapticEnabled = true
     @State private var glowing = false
     @State private var tapCount = 0
 
     var body: some View {
         Button {
-            tapCount += 1
+            if hapticEnabled { tapCount += 1 }
             withAnimation(.quellEaseGentle(duration: .quellDurFast)) {
                 glowing = true
             }

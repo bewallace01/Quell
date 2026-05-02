@@ -11,7 +11,6 @@ struct PlaceholderHomeView: View {
         case dontKnowScan
         case ragePad
         case waveCheck
-        case coPilot
         case eatAnywayEntry
         case eatMindful
         case eatJust
@@ -23,6 +22,9 @@ struct PlaceholderHomeView: View {
         case wobbling
         case needCompany
         case boringMeeting
+        case settings
+        case crisis
+        case about
     }
 
     @State private var orbVisible = false
@@ -61,8 +63,16 @@ struct PlaceholderHomeView: View {
                         RagePadView(onDismiss: { route(to: .moodProtocol(.rage)) })
                     case .waveCheck:
                         WaveCheckView(onComplete: completeWave)
-                    case .coPilot:
-                        CoPilotPlaceholderView(onDismiss: dismiss)
+                    case .settings:
+                        SettingsView(
+                            onCrisis: { route(to: .crisis) },
+                            onAbout: { route(to: .about) },
+                            onDismiss: dismiss
+                        )
+                    case .crisis:
+                        CrisisResourcesView(onDismiss: dismiss)
+                    case .about:
+                        AboutView(onDismiss: dismiss)
                     case .eatAnywayEntry:
                         EatAnywayEntryView(
                             onMindful: { route(to: .eatMindful) },
@@ -158,28 +168,10 @@ struct PlaceholderHomeView: View {
                 .padding(.horizontal, .quellSpace7)
                 .opacity(stonesVisible ? 1 : 0)
 
-                HStack(spacing: .quellSpace6) {
-                    Button {
-                        route(to: .voiceNotes)
-                    } label: {
-                        Text("future-you.")
-                            .font(.quellCaption)
-                            .foregroundStyle(Color.quellWhisper)
-                            .padding(.vertical, .quellSpace3)
-                            .padding(.horizontal, .quellSpace4)
-                    }
-                    .buttonStyle(.plain)
-
-                    Button {
-                        route(to: .boringMeeting)
-                    } label: {
-                        Text("in a meeting.")
-                            .font(.quellCaption)
-                            .foregroundStyle(Color.quellWhisper)
-                            .padding(.vertical, .quellSpace3)
-                            .padding(.horizontal, .quellSpace4)
-                    }
-                    .buttonStyle(.plain)
+                HStack(spacing: .quellSpace5) {
+                    homeLink("future-you.") { route(to: .voiceNotes) }
+                    homeLink("in a meeting.") { route(to: .boringMeeting) }
+                    homeLink("settings.") { route(to: .settings) }
                 }
                 .opacity(stonesVisible ? 1 : 0)
             }
@@ -217,6 +209,17 @@ struct PlaceholderHomeView: View {
         if let url = URL(string: "sms:") {
             openURL(url)
         }
+    }
+
+    private func homeLink(_ label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .font(.quellCaption)
+                .foregroundStyle(Color.quellWhisper)
+                .padding(.vertical, .quellSpace3)
+                .padding(.horizontal, .quellSpace3)
+        }
+        .buttonStyle(.plain)
     }
 
     private func dismiss() {
@@ -275,7 +278,7 @@ struct PlaceholderHomeView: View {
             case .same:
                 destination = .fork
             case .bigger:
-                destination = .coPilot
+                destination = .crisis
             }
         }
     }

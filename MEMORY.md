@@ -12,17 +12,19 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Wired the remaining home stones (Steady / Wobbling / Need company — were placeholders since Slice 1.4) and shipped Phase 9 (Boring Meeting Protocol) in one push. Home is now complete for both urge and non-urge states.
+Closed Phase 10.2 (Settings) + 10.3 (Crisis resources) + 10.4 (About). App is now ship-ready in scope; missing pieces are app icon + verified NEDA number + clinical advisor credit (all design/content tasks, not code).
 
-New: `BreathingMomentView` — generic breath + Wren phrases + "okay" close on `quellMidnight` (deliberately lighter than urge's `quellAbyss`), with optional extra stone parameter. Reused for Wobbling (6 phrases about "the day's a little off") and Need Company (6 phrases about presence + "text someone" extra stone that opens Messages with `sms:` URL via `openURL`). Steady reuses the existing `ClosingLineView` with "good. nice to see you." — lightest weight, just an acknowledgment.
+`SettingsView` reachable from new `settings.` link on home (third in the row beside `future-you.` and `in a meeting.`). Sections: feedback (haptic toggle wired to WordStone via @AppStorage; audio toggle persisted but not wired), system (notifications button opens iOS Settings via `UIApplication.openSettingsURLString`), safety (crisis / about), debug (reset onboarding). Wren tone preference and stealth toggles deferred — no content/feature variation to toggle yet.
 
-`BoringMeetingView` — discrete in-meeting mode reachable from a subtle "in a meeting." link beside "future-you." on home. `quellMidnight` background looks like a plain notes document; three sections (hand fidgets / desk exercises / silent breath) with 13 text prompts total, scrollable. Small "done" button top-right to dismiss (tap-anywhere conflicts with scroll). Spec'd haptic-only breath cycle deferred — text instructions are sufficient for v1.
+`CrisisResourcesView` consolidates the old `CoPilotPlaceholderView` (deleted). Three tap-to-action resources: 988 (suicide & crisis lifeline), 741741 (crisis text line, body=HOME), 911. Footer: "this app is a supplement to professional care. not a replacement." NEDA helpline excluded until Bailey verifies the number. Reachable from Settings (2 taps from home) and direct from Wave Check `.bigger`.
+
+`AboutView` — "quell." + "no fixing. just presence." + four paragraphs (philosophy / privacy / clinical care reminder / advisor TBD). Privacy promise codified: "everything you save stays on your device. no cloud sync. no tracking. no analytics. your patterns are yours."
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next direction.** App is substantively feature-complete. Two paths: the **data path** (Phase 8 Pattern Detective — needs structured logging at every protocol's auto-advance and exit, weekly summary screen) gives meaning to the data the user is generating. The **ship-readiness path** (Phase 10.2 Settings, 10.3 proper crisis resources, 10.4 About + safety, then Phase 12 polish + TestFlight) gets the app launchable. Phase 3 Wren character/presence design is also still open and would unblock the long-press-on-Wren Eat Anyway access point.
+**Open: pick next direction.** Settings + crisis + about all shipped. Code-side ship-readiness is largely complete. Remaining open work: Phase 8 Pattern Detective (data path — would also wire Slice 10.1 engagement heat map). App icon design (Phase 12.2 — design work, not code). NEDA helpline number to verify. Clinical advisor to secure. TestFlight build/upload (Phase 12.3 — needs Apple Developer enrollment).
 
 ## Where We Left Off
 
@@ -68,6 +70,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - Body route is the spec'd sensory icon picker, not an Eat Anyway shortcut. ~20 swaps across crunch / cold / warm / sweet / salty are real concrete suggestions with "why it works" copy. Easy to extend: add to `SensorySwapStore.seedSwaps()`.
 - First impression and stealth are real. Onboarding introduces Wren in 6 soft lines on first launch. Quick-blur disguises the app as a fake Notes screen on shake from any screen. Two of the brand's most distinctive surfaces are live.
 - Home is complete for all four states — Steady acknowledges and closes, Wobbling and Need Company route to soft breathing moments, In It runs the full urge flow. Plus stealth utility "in a meeting." reachable from anywhere via a subtle home link.
+- App is ship-ready in scope: settings, crisis resources, about page, onboarding, stealth all live. Remaining holes are content-side (NEDA verified number, clinical advisor credit, app icon design) and a real TestFlight build, not code.
 
 ## What's Not Working
 
@@ -84,6 +87,15 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 10.2 + 10.3 + 10.4 (Settings, Crisis, About):**
+
+- **Settings is the new utility surface.** Anything that was deferred for "v2 toggles" or "system permission link" lands here. Pattern: section groups with `quellShade` capsule backgrounds, `quellCaption` `quellWhisper` headers, body rows in `quellBody`. Reusable for any future "list of toggleable / linkable items" screen.
+- **`@AppStorage` is the toggle persistence layer.** `quell.hapticEnabled`, `quell.audioEnabled`, `quell.hasOnboarded`. Toggles in views that read these AppStorage values respond live.
+- **Wiring a toggle requires a real consumer.** Haptic toggle works because `WordStone` reads `quell.hapticEnabled` and guards `tapCount` increments. Audio toggle is persisted but unwired — voice notes are user-triggered with no clean "audio off" semantic. When adding new toggles, name the consumer up front; persisting without wiring is debt.
+- **`CrisisResourcesView` consolidates Wave-Check escalation and Settings-side crisis access.** Two callsites for one view. Pattern: build screens that don't bind to a specific entry point, route them by `Destination` enum from anywhere.
+- **`AboutView` has the privacy promise codified in copy.** "everything you save stays on your device. no cloud sync. no tracking. no analytics." If we ever introduce optional cloud sync or analytics, this copy must change first.
+- **`UIKit` import for `UIApplication.openSettingsURLString`** — the iOS Settings deep link constant lives in UIKit even when imported into a SwiftUI file.
 
 **Home stones + Phase 9 (Boring Meeting):**
 
@@ -226,7 +238,6 @@ Quell/
         │   ├── DontKnowScanView.swift
         │   ├── RagePadView.swift
         │   ├── WaveCheckView.swift
-        │   ├── CoPilotPlaceholderView.swift
         │   ├── ClosingLineView.swift
         │   ├── EatAnywayEntryView.swift
         │   ├── MindfulEatView.swift
@@ -238,7 +249,10 @@ Quell/
         │   ├── OnboardingView.swift
         │   ├── DisguiseView.swift
         │   ├── BreathingMomentView.swift
-        │   └── BoringMeetingView.swift
+        │   ├── BoringMeetingView.swift
+        │   ├── SettingsView.swift
+        │   ├── CrisisResourcesView.swift
+        │   └── AboutView.swift
         ├── Storage/
         │   ├── VoiceNoteStore.swift
         │   └── SensorySwapStore.swift
