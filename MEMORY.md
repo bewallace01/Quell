@@ -12,15 +12,13 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed all of Phase 7 (Future Self Voice Notes). Jumped ahead in plan order again because Bailey wanted high-impact features. New: `VoiceNoteStore` (UserDefaults + Documents/, max 5 notes, date metadata only — title editing skipped), `RecordVoiceNoteView` with a 4-state machine (initial → recording → review → denied) backed by an `AVAudioRecorder` wrapper, `VoiceNotesListView` for play/delete management, subtle "future-you." link on the home in `quellWhisper`. Co-regulation surfaces a "your voice" stone above stay/skip-ahead only when `store.hasNotes`, plays a random note inline via `AVAudioPlayer` while the orb and Wren keep going. Mic permission via `AVAudioApplication.requestRecordPermission()` requested only at the moment of need. `NSMicrophoneUsageDescription` added to Info.plist.
-
-Combine import gotcha: `@StateObject` requires `import Combine` explicitly in iOS 17 (it doesn't transit through SwiftUI). Caught on first build. Worth knowing for any future ObservableObject usage.
+Closed all of Phase 6 (mood protocols + Don't Know body scan). All six mood taps now lead to a real protocol screen — no placeholders left in the mood path. `AnxiousProtocolView` deleted in favor of a generic `MoodProtocolView(mood:)` parameterized by mood-specific phrase sets and durations (Anxious 120s, Lonely 120s, Tired 240s, Bored 90s, Numb 120s, Rage 120s). Rage gets a "rage pad" affordance that opens `RagePadView` — a TextField that explicitly clears on dismiss and never saves (the "private rage-typing pad that auto-deletes" from the spec, minus the somatic shake-off animation which is deferred). `DontKnowScanView` for the Fork's Don't-know choice: 6 sequential body-area prompts (head/jaw/chest/stomach/hands/feet) with tight/neutral/open stones; most-tight=stomach routes to Eat Anyway, otherwise to co-regulation breath. Routing flattened: `.anxiousProtocol` removed, `.moodProtocol(MoodChoice)` covers all six.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next high-value direction.** Phase 7 just shipped; Phase 5 + Phase 7 both want stare-tests on Bailey. Strongest remaining candidates: Phase 6 fill-in mood protocols (Lonely / Tired / Bored / Numb / Rage — completes the urge flow, lots of code reuse); Phase 4 Body route + Sensory Swaps (replaces the current direct Body→Eat-Anyway shortcut with sensory-icon picker + 10-15 hand-curated swap entries); local notifications for daily check-ins.
+**Open: pick next high-value direction.** The whole urge flow is now wired end-to-end with no placeholders. Strongest remaining candidates: Phase 4 Body route + Sensory Swaps (replaces the Body→Eat-Anyway shortcut with the spec'd sensory icon picker + small swap library); Phase 12.1 onboarding (first-launch Wren introduction — every user sees this); Phase 11.1 Quick-blur (shake-to-disguise stealth feature); Phase 8 Pattern Detective (needs structured logging infrastructure first). Steady / Wobbling / Need company stones on home still go to placeholder destinations.
 
 ## Where We Left Off
 
@@ -62,6 +60,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - The Wave Check slider is the literal wave. Two stroked sine-wave layers (`quellMoon` primary + softer `quellGlow` at phase offset) whose amplitude responds live to the user's drag. Dragging toward "smaller" calms the wave; toward "bigger" amplifies it. The metaphor is the answer — the user reports the wave's state by *being* the wave's state. Bailey's checkpoint: "looks good."
 - Eat Anyway is wired end-to-end via Body → entry → mindful or just-eat → "still here." close. Notifications for the just-eat 20-min ping work via UNUserNotificationCenter; permission requested only at the moment of need. Bailey's signature feature is real.
 - Voice notes are recordable and play back inline during co-regulation. Max 5, local-only, mic permission requested at moment of need. The deepest emotional hook in the brief is now real — your sober self can record a note for your future-overwhelmed self.
+- All six moods (Anxious / Lonely / Tired / Bored / Numb / Rage) lead to real protocols now via a generic `MoodProtocolView`. Don't-know on the Fork goes through a 6-area body scan that routes intelligently to Eat Anyway or co-regulation. The urge flow has no placeholder leaves left.
 
 ## What's Not Working
 
@@ -78,6 +77,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 6 (Mood protocols + Don't Know scan):**
+
+- **Generic `MoodProtocolView(mood:)` with mood-specific phrase sets + durations.** All six moods share one component instead of six. Mood-specific config lives in computed properties (`phrases` and `duration`) inside the view. Pattern reusable for other "same shape, different content per case" screens.
+- **`Destination.moodProtocol(MoodChoice)`** with associated value works fine for `Equatable` since `MoodChoice` is Equatable. Replaced separate `.anxiousProtocol` case with this generic one.
+- **Don't-know body scan suggestion logic is intentionally simple.** `most-tight == stomach → eat-anyway, else → co-regulation`. Crude but correct for v1. When Phase 8 lands the Pattern Detective with logged outcomes, scan suggestions could become smarter (which-suggestion-leads-to-smaller-wave-checks-most-often), but that's well-future.
+- **Wren phrase principle held across all 5 new phrase sets.** Friend-on-the-floor, no therapy-stock, no self-announcing "i" frames, observational over declarative. See per-mood arrays in `MoodProtocolView.phrases`. Worth re-reading when adding more Wren copy elsewhere.
 
 **Phase 7 (Future Self Voice Notes):**
 
@@ -187,7 +193,9 @@ Quell/
         │   ├── CoRegulationView.swift
         │   ├── ForkView.swift
         │   ├── MoodView.swift
-        │   ├── AnxiousProtocolView.swift
+        │   ├── MoodProtocolView.swift
+        │   ├── DontKnowScanView.swift
+        │   ├── RagePadView.swift
         │   ├── WaveCheckView.swift
         │   ├── CoPilotPlaceholderView.swift
         │   ├── ClosingLineView.swift

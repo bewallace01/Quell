@@ -264,31 +264,19 @@
 
 ## Phase 6: Remaining Mood Routes + Don't Know
 
-### Slice 6.1: Lonely protocol
+### Slices 6.1–6.5: Mood protocols
 
-- [ ] Future Self voice note placeholder + "anchor person" Messages-app handoff
-
-### Slice 6.2: Tired protocol
-
-- [ ] Permission slip to rest + 4-minute power-down
-
-### Slice 6.3: Bored protocol
-
-- [ ] Boring Meeting Protocol entry (full version in Phase 9) + 90-second curiosity prompt
-
-### Slice 6.4: Numb protocol
-
-- [ ] Body scan + gentle re-entry exercise
-
-### Slice 6.5: Rage protocol
-
-- [ ] Somatic shake-off video/animation + private rage-typing pad that auto-deletes
+- [x] All six moods (incl. Anxious from 2.4) now share a generic `MoodProtocolView(mood:)`. `AnxiousProtocolView.swift` deleted; replaced.
+- [x] Mood-specific phrase sets (Wren voice, friend-on-the-floor) and durations: Anxious 120s, Lonely 120s, Tired 240s (4-min power-down per spec), Bored 90s, Numb 120s, Rage 120s.
+- [x] Slice 6.5 deviation: somatic shake-off video/animation deferred for v1. The "rage pad" private auto-delete typing pad ships as `RagePadView` — TextField with `tint: quellGlow`, "done" stone clears the text and dismisses, no save anywhere.
+- [x] Slice 6.1 deviation: "anchor person" Messages handoff deferred. Future Self voice note already surfaces in co-reg from Phase 7; mood protocols don't surface them yet (could add).
+- [x] All mood protocols auto-advance to Wave Check after their duration. "this isn't helping" routes back to Fork.
 
 ### Slice 6.6: Don't Know — body scan flow
 
-- [ ] 90-second guided scan: head, jaw, chest, stomach, hands, feet
-- [ ] One tap per area: tight / neutral / open
-- [ ] Soft suggestion at end, user can accept or override
+- [x] `DontKnowScanView` — 6 sequential prompts (head / jaw / chest / stomach / hands / feet), each with tight / neutral / open `WordStone`s.
+- [x] Suggestion: most-tight area = stomach → routes to Eat Anyway entry; otherwise → co-regulation breath. User accepts via the Mood/Eat-Anyway flow that follows; explicit confirm prompt deferred.
+- [x] Reached from Fork's "Don't know" choice (was a placeholder).
 
 ---
 

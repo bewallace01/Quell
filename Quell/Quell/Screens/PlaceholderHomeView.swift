@@ -7,7 +7,9 @@ struct PlaceholderHomeView: View {
         case coRegulation
         case fork
         case mood
-        case anxiousProtocol
+        case moodProtocol(MoodChoice)
+        case dontKnowScan
+        case ragePad
         case waveCheck
         case coPilot
         case eatAnywayEntry
@@ -41,8 +43,17 @@ struct PlaceholderHomeView: View {
                         ForkView(onCommit: commitFork)
                     case .mood:
                         MoodView(onCommit: commitMood)
-                    case .anxiousProtocol:
-                        AnxiousProtocolView(onTryElse: advanceToFork, onAdvance: advanceToWaveCheck)
+                    case .moodProtocol(let mood):
+                        MoodProtocolView(
+                            mood: mood,
+                            onTryElse: advanceToFork,
+                            onAdvance: advanceToWaveCheck,
+                            onRagePad: { route(to: .ragePad) }
+                        )
+                    case .dontKnowScan:
+                        DontKnowScanView(onComplete: completeScan)
+                    case .ragePad:
+                        RagePadView(onDismiss: { route(to: .moodProtocol(.rage)) })
                     case .waveCheck:
                         WaveCheckView(onComplete: completeWave)
                     case .coPilot:
@@ -161,18 +172,24 @@ struct PlaceholderHomeView: View {
             case .body:
                 destination = .eatAnywayEntry
             case .dontKnow:
-                destination = .stone(choice.rawValue)
+                destination = .dontKnowScan
             }
         }
     }
 
     private func commitMood(_ choice: MoodChoice) {
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
-            switch choice {
-            case .anxious:
-                destination = .anxiousProtocol
-            case .lonely, .tired, .bored, .numb, .rage:
-                destination = .stone(choice.rawValue)
+            destination = .moodProtocol(choice)
+        }
+    }
+
+    private func completeScan(_ suggestion: ScanSuggestion) {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            switch suggestion {
+            case .eatAnyway:
+                destination = .eatAnywayEntry
+            case .coRegulation:
+                destination = .coRegulation
             }
         }
     }
