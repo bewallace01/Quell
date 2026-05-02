@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CoRegulationView: View {
 
-    let onExit: () -> Void
+    let onAdvance: () -> Void
 
     @State private var promptVisible = false
     @State private var orbVisible = false
@@ -43,7 +43,7 @@ struct CoRegulationView: View {
                         }
                     }
                     WordStone(label: "skip ahead") {
-                        onExit()
+                        onAdvance()
                     }
                 }
                 .opacity(actionsVisible ? 1 : 0)

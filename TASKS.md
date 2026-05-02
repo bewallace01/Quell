@@ -138,11 +138,12 @@
 
 ### Slice 2.3: The Fork
 
-- [ ] Create `ForkView.swift` — three soft shapes in triangle layout
-- [ ] Top: Body. Lower left: Mood. Lower right: Don't know.
-- [ ] Tap reveals label, second tap commits
-- [ ] Each fork option fades in over 400ms
-- [ ] **Visual checkpoint:** does the three-option layout feel like a real choice or overwhelming? Test with no labels first.
+- [x] Create `ForkView.swift` in `Quell/Quell/Screens/`. Three soft circular shapes (`quellMoon` → `quellMidnight` radial gradient, 100pt diameter, `.blur(radius: 3)`) in a triangle: Body at offset (0, -120), Mood at (-90, 80), Don't know at (90, 80). Background is `quellAbyss` to keep the urge-flow tonal world.
+- [x] `ForkChoice` enum (`.body` / `.mood` / `.dontKnow`) with raw String labels. `ForkView.onCommit` fires the chosen case to the parent.
+- [x] **Deviated from spec.** Original spec was "tap reveals label, second tap commits" but Bailey called the discovery friction-y in stare-test. Shipped: **labels always visible, single tap commits.** Tap fires a soft-impact haptic via `.sensoryFeedback`, scales the option down to 0.94 during press via custom `ForkPressStyle`, and adds a brief `quellGlow` shadow on the tapped shape before the cross-fade to the destination.
+- [x] All three options fade in together over `quellDurSlow` after a 0.3s delay (so the cross-fade from co-regulation has time to settle first).
+- [x] Routing: extended `Destination` enum with `.fork`. Renamed `CoRegulationView.onExit` to `onAdvance` (its semantic is now "advance to Fork", not "exit to home"). `ForkView.onCommit` routes each choice to a `StoneDestinationView` placeholder; Phases 4 (Body) and 6 (mood/scan) will replace those.
+- [x] **Visual checkpoint:** does the three-option layout feel like a real choice or overwhelming? Test with no labels first.
 
 ### Slice 2.4: Mood route — Anxious protocol
 

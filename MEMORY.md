@@ -12,15 +12,17 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slice 2.2. Shipped `WrenLine.swift` in `Components/` — a styled text component that owns its own phrase rotation via `.task`. Renders one phrase at a time in `quellDisplay`, cross-fades to the next every 22 seconds (~2 full breath cycles) using `quellEaseSlow` over `quellDurSlow`. CoRegulationView now passes a phrase list and interval; the static "i'm here.\nbreathe with me." line is gone.
+Closed Slice 2.3. Shipped `ForkView.swift` in `Screens/` — three soft circular shapes in a triangle layout (Body top, Mood lower-left, Don't know lower-right) on `quellAbyss`. Each shape is a `quellMoon` → `quellMidnight` radial gradient, 100pt diameter, slight blur. Routing: extended `Destination` enum with `.fork`; `CoRegulationView`'s "skip ahead" now routes there (renamed `onExit` → `onAdvance`); each Fork commit routes to a `StoneDestinationView` placeholder for now (Phases 4 and 6 will replace those).
 
-First-draft phrases were therapy-stock affirmations ("i see you", "you're not alone in this", "your body is doing the work") and read as cheesy — Bailey called it. Rewrote toward friend-on-the-floor voice: observational, plainspoken, dropped self-announcing "i" frames. Final set: `still here.` / `yeah, this is hard.` / `no rush.` / `we can wait.` / `it'll pass. it always does.` / `just this.` This is the principle for future Wren writing: less calm-presenter, more real-friend-who's-been-here.
+Deviated from the slice spec on the interaction: shipped two-tap discovery first (tap reveals label, second tap commits), Bailey said it was "kind of a lot to have to tap each shape to reveal," rewrote to labels-always-visible + single-tap commit. Press feedback: scale to 0.94 + soft-impact haptic + brief `quellGlow` shadow.
+
+Saved a feedback memory: "Prefer minimum friction in feel-driven contexts." This is the second time in close succession (Slice 2.2 cheesy phrases, Slice 2.3 two-tap discovery) where I shipped a richer/more-deliberate interaction or copy register and Bailey corrected toward simpler/lower-friction. The pattern: in urge-flow surfaces, friction violates the brand's "no chrome, just presence" voice.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 2.3: The Fork.** Create `ForkView.swift` — three soft shapes in a triangle layout (top: Body, lower left: Mood, lower right: Don't know). Tap reveals label, second tap commits. Each fork option fades in over 400ms (matches `quellDurMid`). Visual checkpoint: does the three-option layout feel like a real choice or overwhelming? Test with no labels first. Also: re-route `CoRegulationView`'s "skip ahead" to land on the Fork instead of dismissing to home, and extend the `Destination` enum with a `.fork` case.
+**Slice 2.4: Mood route — Anxious protocol.** Two pieces. First: a "mood" word-bubbles screen with six options (Anxious, Lonely, Tired, Bored, Numb, Rage). Second: the Anxious tap routes to a 2-3 minute physiological sigh + grounding exercise — a real protocol screen with breathing pacing and gentle Wren guidance. The protocol must include a "this isn't helping, try something else" option that returns to the Fork. Visual checkpoint: do the full protocol; does it actually feel like it would help during real anxiety?
 
 ## Where We Left Off
 
@@ -58,6 +60,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - The home → destination → home dissolve reads as water. Cross-fade with no back-stacking, no slide, no chrome — just the surface dissolving from a question to a held word and back. Bailey's checkpoint: "good."
 - The co-regulation field reads as a deeper interior than the home. The `quellAbyss` background is barely darker than `quellMidnight` numerically, but combined with the larger orb, the held silence, and Wren's rotating phrases, it lands as descent — like dimming the lights to be present with someone. Bailey's checkpoint: "good."
 - Wren's voice is friend-on-the-floor, not calm-presenter. First draft of co-regulation phrases used therapy-stock affirmations ("i see you", "your body is doing the work") and read cheesy. Rewrote to observational/plainspoken: `yeah, this is hard.` / `no rush.` / `it'll pass. it always does.` Less self-announcing, fewer "i" frames, no instruction.
+- The Fork reads as a real choice with three labeled shapes in a triangle, not as overwhelming. Single-tap commits with a soft haptic + brief glow give tactile confirmation without making the user "discover" what each shape means. Bailey's checkpoint: "good, lets move on."
 
 ## What's Not Working
 
@@ -74,6 +77,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 2 — Slice 2.3 (The Fork):**
+
+- **Shipped single-tap commits with labels visible**, not the spec'd two-tap discovery. The spec asked for "tap reveals label, second tap commits" with a stare-test guidance to "test with no labels first." That guidance was about answering a layout question (does the bare triangle read as a choice?), not about prescribing the production interaction. In stare-test the two-tap discovery felt like friction during an urge moment. Single-tap is the brand-correct default for feel-driven surfaces (see also: `feedback_minimum_friction.md`).
+- **`Destination` enum is the flat router for the urge flow.** Now: `.stone(String)`, `.coRegulation`, `.fork`. As Phase 2-6 destinations land, the enum will grow. By the time it's unwieldy (likely Phase 5+), refactor to a NavigationStack or a router type. For now, flat is fine.
+- **`CoRegulationView.onExit` renamed to `onAdvance`.** Semantic shift: "skip ahead" no longer dismisses to home, it advances to the Fork. The pattern for protocol-screen callbacks going forward: `onAdvance` for forward motion, `onDismiss` for backward/return. Use these names consistently.
+- **Triangle layout via `.offset` in a ZStack.** Three shapes positioned at (0, -120), (-90, 80), (90, 80). Phone is taller than wide, so vertical offsets are larger than horizontal. Reusable pattern for future "small fixed set of options" layouts where a Grid would feel too rigid.
 
 **Phase 2 — Slice 2.2 (Wren's first voice):**
 
@@ -147,7 +157,8 @@ Quell/
         ├── Screens/
         │   ├── PlaceholderHomeView.swift
         │   ├── StoneDestinationView.swift
-        │   └── CoRegulationView.swift
+        │   ├── CoRegulationView.swift
+        │   └── ForkView.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf

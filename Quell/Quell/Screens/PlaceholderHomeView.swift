@@ -5,6 +5,7 @@ struct PlaceholderHomeView: View {
     private enum Destination: Equatable {
         case stone(String)
         case coRegulation
+        case fork
     }
 
     @State private var orbVisible = false
@@ -25,7 +26,9 @@ struct PlaceholderHomeView: View {
                     case .stone(let word):
                         StoneDestinationView(word: word, onDismiss: dismiss)
                     case .coRegulation:
-                        CoRegulationView(onExit: dismiss)
+                        CoRegulationView(onAdvance: advanceToFork)
+                    case .fork:
+                        ForkView(onCommit: commitFork)
                     }
                 }
                 .transition(.opacity)
@@ -87,6 +90,18 @@ struct PlaceholderHomeView: View {
     private func dismiss() {
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
             destination = nil
+        }
+    }
+
+    private func advanceToFork() {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            destination = .fork
+        }
+    }
+
+    private func commitFork(_ choice: ForkChoice) {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            destination = .stone(choice.rawValue)
         }
     }
 }
