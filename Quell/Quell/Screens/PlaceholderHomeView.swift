@@ -18,6 +18,8 @@ struct PlaceholderHomeView: View {
         case closingLine(String)
         case voiceNotes
         case voiceRecord
+        case bodyRoute
+        case sensorySwaps(SensoryCategory)
     }
 
     @State private var orbVisible = false
@@ -82,6 +84,13 @@ struct PlaceholderHomeView: View {
                         RecordVoiceNoteView {
                             route(to: .voiceNotes)
                         }
+                    case .bodyRoute:
+                        BodyRouteView(
+                            onCategory: { cat in route(to: .sensorySwaps(cat)) },
+                            onWantFood: { route(to: .eatAnywayEntry) }
+                        )
+                    case .sensorySwaps(let cat):
+                        SensorySwapsView(category: cat, onDismiss: dismiss)
                     }
                 }
                 .transition(.opacity)
@@ -170,7 +179,7 @@ struct PlaceholderHomeView: View {
             case .mood:
                 destination = .mood
             case .body:
-                destination = .eatAnywayEntry
+                destination = .bodyRoute
             case .dontKnow:
                 destination = .dontKnowScan
             }

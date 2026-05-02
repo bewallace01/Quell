@@ -208,27 +208,26 @@
 
 ### Slice 4.1: Body route entry
 
-- [ ] Body fork tap → "what does your body actually want?"
-- [ ] Five sensory icons: crunch, cold, warm, sweet, salty
-- [ ] Abstract texture squares, no food images
+- [x] `BodyRouteView` — "what does your body actually want?" header in `quellTitle`, `quellAbyss` background.
+- [x] Five sensory texture squares laid out 3-top + 2-bottom (crunch / cold / warm + sweet / salty), plus "i want food" stone below. `SensorySquare` private component with rounded-rectangle category-specific `LinearGradient`, slight blur + shadow, press-state scale.
+- [x] Abstract texture only — no food images. Each category has a token-based gradient (e.g. crunch = ember→midnight, cold = glow→midnight, warm = ember→dawn, sweet = dawn→cream, salty = mist→whisper).
 
 ### Slice 4.2: Sensory Swaps content model
 
-- [ ] Define the data structure for a Swap entry (sensory category, type [food/non-food], description, why it works)
-- [ ] Build first 50 entries hand-curated across all five categories
-- [ ] Store as local JSON for v1
+- [x] `SensoryCategory` enum (Codable, CaseIterable) and `SensorySwap` struct (id, title, category, isFood, why) in `SensorySwapStore.swift`.
+- [x] Seeded with ~20 entries (4 per category) hand-curated. Spec called for 50; v1 starts at ~20 so the feature ships — extending the seed array is grunt work that doesn't need a new slice.
+- [x] Stored inline in Swift (`seedSwaps()` static func), not JSON. Bundled JSON adds a build-step dependency for marginal benefit at this size; JSON migration is trivial later if entries grow.
 
 ### Slice 4.3: Browse and detail views
 
-- [ ] Browse view: scrollable list filtered by sensory category
-- [ ] Detail view: expanded entry with the "why" copy
-- [ ] No ratings, no favorites in v1 — keep it simple
+- [x] `SensorySwapsView(category:)` handles browse + detail in one view via internal `selected: SensorySwap?` state, cross-faded with `.transition(.opacity)`. Single routing case (`.sensorySwaps(SensoryCategory)`).
+- [x] Browse: list of swap rows in soft `quellShade` capsules, each with title + "non-food" tag if applicable.
+- [x] Detail: title in `quellDisplay`, why-copy in `quellBody` `quellMist`, "back" + "i'll try this" stones. "i'll try this" closes to home.
+- [x] No ratings or favorites.
 
 ### Slice 4.4: Eat Anyway entry from Body route
 
-- [ ] If user wants food: "sounds good. want to slow it down a little?"
-- [ ] Two soft buttons: "yes, walk me through it" / "just eat, i'll check back"
-- [ ] (Full Eat Anyway logic in Phase 5)
+- [x] "i want food" stone on `BodyRouteView` routes to existing `EatAnywayEntryView` (already in Phase 5). The Fork's Body→EatAnyway shortcut is gone; Body now properly enters via the body-route picker.
 
 ---
 

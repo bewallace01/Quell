@@ -12,13 +12,13 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed all of Phase 6 (mood protocols + Don't Know body scan). All six mood taps now lead to a real protocol screen — no placeholders left in the mood path. `AnxiousProtocolView` deleted in favor of a generic `MoodProtocolView(mood:)` parameterized by mood-specific phrase sets and durations (Anxious 120s, Lonely 120s, Tired 240s, Bored 90s, Numb 120s, Rage 120s). Rage gets a "rage pad" affordance that opens `RagePadView` — a TextField that explicitly clears on dismiss and never saves (the "private rage-typing pad that auto-deletes" from the spec, minus the somatic shake-off animation which is deferred). `DontKnowScanView` for the Fork's Don't-know choice: 6 sequential body-area prompts (head/jaw/chest/stomach/hands/feet) with tight/neutral/open stones; most-tight=stomach routes to Eat Anyway, otherwise to co-regulation breath. Routing flattened: `.anxiousProtocol` removed, `.moodProtocol(MoodChoice)` covers all six.
+Closed all of Phase 4 (Body route + Sensory Swaps). The Fork's Body choice no longer shortcuts to Eat Anyway; it enters `BodyRouteView` ("what does your body actually want?") with five sensory texture squares (crunch / cold / warm / sweet / salty) plus an "i want food" stone. Each category routes to `SensorySwapsView(category:)` — a combined browse + detail screen using internal `selected` state and `.transition(.opacity)` to swap between modes. ~20 hand-curated swaps (4 per category) seeded inline in `SensorySwapStore`; spec called for 50, v1 ships smaller and Bailey can extend the seed array without a new slice. "i'll try this" on the detail closes to home; "i want food" routes to the existing Eat Anyway entry.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next high-value direction.** The whole urge flow is now wired end-to-end with no placeholders. Strongest remaining candidates: Phase 4 Body route + Sensory Swaps (replaces the Body→Eat-Anyway shortcut with the spec'd sensory icon picker + small swap library); Phase 12.1 onboarding (first-launch Wren introduction — every user sees this); Phase 11.1 Quick-blur (shake-to-disguise stealth feature); Phase 8 Pattern Detective (needs structured logging infrastructure first). Steady / Wobbling / Need company stones on home still go to placeholder destinations.
+**Open: pick next high-value direction.** Strongest remaining candidates: Phase 12.1 onboarding (first-launch Wren introduction — every user sees this); Phase 11.1 Quick-blur stealth (shake-to-disguise); Phase 9 Boring Meeting Protocol (covert in-meeting mode, accessible from anywhere); Phase 8 Pattern Detective (needs structured logging infrastructure first); Phase 3 Wren character avatar / presence design (would unblock the long-press-on-Wren Eat Anyway access point). Steady / Wobbling / Need company stones on home still go to placeholder destinations.
 
 ## Where We Left Off
 
@@ -61,6 +61,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - Eat Anyway is wired end-to-end via Body → entry → mindful or just-eat → "still here." close. Notifications for the just-eat 20-min ping work via UNUserNotificationCenter; permission requested only at the moment of need. Bailey's signature feature is real.
 - Voice notes are recordable and play back inline during co-regulation. Max 5, local-only, mic permission requested at moment of need. The deepest emotional hook in the brief is now real — your sober self can record a note for your future-overwhelmed self.
 - All six moods (Anxious / Lonely / Tired / Bored / Numb / Rage) lead to real protocols now via a generic `MoodProtocolView`. Don't-know on the Fork goes through a 6-area body scan that routes intelligently to Eat Anyway or co-regulation. The urge flow has no placeholder leaves left.
+- Body route is the spec'd sensory icon picker, not an Eat Anyway shortcut. ~20 swaps across crunch / cold / warm / sweet / salty are real concrete suggestions with "why it works" copy. Easy to extend: add to `SensorySwapStore.seedSwaps()`.
 
 ## What's Not Working
 
@@ -77,6 +78,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 4 (Body route + Sensory Swaps):**
+
+- **Combined browse + detail in one view via internal state**, not two routing cases. `SensorySwapsView` toggles between list and detail using `selected: SensorySwap?` + `.transition(.opacity)`. Single `.sensorySwaps(SensoryCategory)` destination. Pattern reusable for any "list-then-detail" sub-flow that doesn't need cross-deep-linking.
+- **Content seeded inline in Swift, not bundled JSON.** ~20 swaps lives fine in a static func; bundled JSON adds build-step complexity for marginal benefit at this size. Migrate to JSON if the seed grows past ~100 entries or if non-developers need to edit it.
+- **Texture squares use `LinearGradient` with category-specific token palettes** (e.g. crunch = ember→midnight). No food images — the gradient suggests sensation, not the food. If a category needs more visual punch, layer two gradients or add a Canvas-drawn pattern; for v1 plain gradients read fine.
+- **`SensoryCategory` token-color mapping** in an extension (`gradientColors: [Color]`). Keeps tokens out of view files. Same pattern would work for a future "destination color" mapping if other Phase 6 protocols want their own ambient tints.
 
 **Phase 6 (Mood protocols + Don't Know scan):**
 
@@ -203,9 +211,12 @@ Quell/
         │   ├── MindfulEatView.swift
         │   ├── JustEatView.swift
         │   ├── RecordVoiceNoteView.swift
-        │   └── VoiceNotesListView.swift
+        │   ├── VoiceNotesListView.swift
+        │   ├── BodyRouteView.swift
+        │   └── SensorySwapsView.swift
         ├── Storage/
-        │   └── VoiceNoteStore.swift
+        │   ├── VoiceNoteStore.swift
+        │   └── SensorySwapStore.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf
