@@ -167,9 +167,9 @@
 
 ### Slice 2.6: The Debrief
 
-- [ ] Three skippable prompts: trigger, what helped, what to tell future-you
-- [ ] Save quietly to local storage (we'll formalize storage in Phase 8)
-- [ ] No score, no verdict, just a soft "thanks for showing up"
+- [-] ~~Three skippable prompts: trigger, what helped, what to tell future-you~~ — scrapped. Bailey: "the last thing i'd want is to answer questions." The brief's third bullet is the spirit; questions contradict it.
+- [-] ~~Save quietly to local storage~~ — no save needed. Phase 8 Pattern Detective captures structured metadata (time, tool, outcome) automatically without prompts.
+- [x] Single soft `ClosingLineView` showing "thanks for showing up." for 3.5s, then home. Reusable component (parameterized line) — Phase 5 also uses it with "still here."
 
 ### Phase 2 Closeout
 
@@ -238,26 +238,26 @@
 
 ### Slice 5.1: Mindful path
 
-- [ ] "Take it somewhere you can sit. Phone face-down. Eyes on the food. First three bites, just notice."
-- [ ] Optional 10-minute soft timer
-- [ ] Gentle check-in at end
+- [x] `MindfulEatView` shows the four guidance lines + "ten minutes" / "skip timer" stones. Tapping "ten minutes" → ambient screen with `BreathingShape(size: 220)`. Tap anywhere or wait 10 min → close.
+- [x] `timerDuration: Duration = .seconds(600)` parameterizable for dev testing.
+- [x] Closes via `ClosingLineView(line: "still here.")` — no questions, per Bailey's debrief feedback.
 
 ### Slice 5.2: Just-eat path
 
-- [ ] "I'm here when you're ready. No pressure."
-- [ ] Ambient screen with breathing circle
-- [ ] Soft return ping after 20 minutes (local notification)
+- [x] `JustEatView` — ambient `BreathingShape(size: 220)` + "i'm here when you're ready. / no pressure." Tap anywhere to dismiss.
+- [x] Schedules a 20-min local notification ("checking back. still here when you want me.") via `UNUserNotificationCenter`. Permission requested when JustEat starts; denial is silent (screen still works).
+- [x] Tap-to-dismiss cancels the pending notification by identifier.
 
 ### Slice 5.3: Post-eat debrief
 
-- [ ] "How are you?" — single soft prompt
-- [ ] Optional: trigger tag, one line of reflection
-- [ ] No food details captured. Ever.
+- [-] ~~"How are you?" — single soft prompt~~ — scrapped per Bailey's debrief feedback (no questions after the moment).
+- [-] ~~Optional: trigger tag, one line of reflection~~ — scrapped, same reason.
+- [x] Both eat-anyway paths close via `ClosingLineView(line: "still here.")`. No food details captured anywhere — preserved.
 
 ### Slice 5.4: Eat Anyway access points
 
-- [ ] Available from Body route
-- [ ] Available from anywhere via long-press on Wren's presence
+- [x] Body fork choice routes to `EatAnywayEntryView` — "sounds good. / want to slow it down?" with "yes, walk me through" / "just eat. i'll check back." stones.
+- [ ] Long-press on Wren's presence — deferred. Wren has no visual avatar yet (text only); revisit in Phase 3.2 when Wren's presence design is locked.
 - [ ] **This must be the easiest feature to find when someone is going to eat regardless. Test the access path under pressure.**
 
 ---

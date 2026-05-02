@@ -10,6 +10,10 @@ struct PlaceholderHomeView: View {
         case anxiousProtocol
         case waveCheck
         case coPilot
+        case eatAnywayEntry
+        case eatMindful
+        case eatJust
+        case closingLine(String)
     }
 
     @State private var orbVisible = false
@@ -41,6 +45,21 @@ struct PlaceholderHomeView: View {
                         WaveCheckView(onComplete: completeWave)
                     case .coPilot:
                         CoPilotPlaceholderView(onDismiss: dismiss)
+                    case .eatAnywayEntry:
+                        EatAnywayEntryView(
+                            onMindful: { route(to: .eatMindful) },
+                            onJustEat: { route(to: .eatJust) }
+                        )
+                    case .eatMindful:
+                        MindfulEatView {
+                            route(to: .closingLine("still here."))
+                        }
+                    case .eatJust:
+                        JustEatView {
+                            route(to: .closingLine("still here."))
+                        }
+                    case .closingLine(let line):
+                        ClosingLineView(line: line, onComplete: dismiss)
                     }
                 }
                 .transition(.opacity)
@@ -116,7 +135,9 @@ struct PlaceholderHomeView: View {
             switch choice {
             case .mood:
                 destination = .mood
-            case .body, .dontKnow:
+            case .body:
+                destination = .eatAnywayEntry
+            case .dontKnow:
                 destination = .stone(choice.rawValue)
             }
         }
@@ -143,12 +164,18 @@ struct PlaceholderHomeView: View {
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
             switch result {
             case .smaller:
-                destination = nil
+                destination = .closingLine("thanks for showing up.")
             case .same:
                 destination = .fork
             case .bigger:
                 destination = .coPilot
             }
+        }
+    }
+
+    private func route(to next: Destination) {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            destination = next
         }
     }
 }

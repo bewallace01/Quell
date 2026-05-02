@@ -12,21 +12,17 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slices 2.4 and 2.5 together. The urge flow now runs end-to-end on the "In it" path: home → co-regulation (8s held silence + rotating Wren phrases) → "skip ahead" → Fork → Mood (six word-bubbles) → Anxious → 2-minute protocol with rotating Wren guidance for the physiological sigh + grounding → auto-advance to Wave Check → drag the wave slider → branch to home (smaller), Fork (same), or Co-pilot escalation with 988 (bigger).
+Closed Slice 2.6 + all of Phase 5 in one push, jumping ahead in plan order because Bailey wanted velocity ("can we speed things up... at this rate building an app is going to take forever") and a more useful app ("what else can we do to make this a useful app that actually does something").
 
-Slice 2.4 added `MoodView` (six `WordStone`s in a 2×3 grid with header "what is it?") and `AnxiousProtocolView` (`BreathingShape(size: 280)` + `WrenLine` rotating six protocol phrases on a 30s interval — physiological-sigh and grounding cues mixed). The breath visual reuses default `BreathingShape` timing rather than a literal sigh-pattern visual; Wren's text does the cueing. Parameterizing `BreathingShape` to support a true sigh visual is deferred until stare-test feedback says it's needed.
+**Slice 2.6 redesign.** First-draft 2.6 had three text-input prompts (trigger / what helped / future-you) backed by a `DebriefStore` (UserDefaults). Bailey called it: "the last thing i'd want is to answer questions." Scrapped the prompts entirely. Renamed `DebriefView` → `ClosingLineView` and parameterized the line, so it's reusable. Wave Check `.smaller` now routes to `ClosingLineView(line: "thanks for showing up.")` for 3.5s, then home. Phase 8 Pattern Detective will capture metadata (time, tool, outcome) without asking. `DebriefStore.swift` deleted.
 
-Slice 2.5 added `WaveCheckView`, `CoPilotPlaceholderView`, and `SoftSlider`. The slider went through three iterations: (1) iOS default `Slider` with `quellGlow` tint — too utilitarian; (2) custom flat-capsule track with `quellGlow`→`quellMoon` orb thumb — better but didn't sell the "wave" metaphor; (3) **wave-as-track** — two stroked sine-wave Paths (primary `quellMoon` at full amplitude, softer `quellGlow` at 70% amplitude with π/3 phase offset for layered depth) where the amplitude responds live to slider value via `maxAmplitude * (1 - value)`. Dragging toward "smaller" flattens the wave; toward "bigger" amplifies it. The user can see themselves calming the wave (or not).
-
-`AnxiousProtocolView` now auto-advances to Wave Check after `duration: Duration = .seconds(120)` (2 min). Bigger result routes to `CoPilotPlaceholderView` with a "988 — call" stone using `tel:988` via the `openURL` environment; NAED helpline excluded from v1 since I don't have a verified number. Phase 10.3 will build crisis resources properly.
-
-Also: jotted a home-screen widget idea into the brief's backlog — a small breathing orb or single rotating Wren line as a daily presence on iOS home screen, tap routes straight into "In it." Bailey raised it organically; not in the v1 scope.
+**Phase 5 — Eat Anyway, all four slices.** The Fork's "Body" branch now routes to `EatAnywayEntryView` ("sounds good. / want to slow it down?") with two stones: "yes, walk me through" → `MindfulEatView` (4 guidance lines + 10-min ambient breathing timer, tap-to-end), and "just eat. i'll check back." → `JustEatView` (ambient breathing + scheduled 20-min local notification "checking back. still here when you want me."). Both close via `ClosingLineView(line: "still here.")`. Permission for notifications requested only when JustEat starts; denial is silent. Long-press-on-Wren access point deferred to Phase 3.2 (Wren has no visual avatar yet).
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Slice 2.6: The Debrief.** Three skippable prompts after a "smaller" Wave Check result: trigger, what helped, what to tell future-you. Save quietly to local storage (storage formalized in Phase 8 — for 2.6 likely UserDefaults or a simple JSON file). No score, no verdict, just a soft "thanks for showing up" close. Currently `.smaller` Wave Check result routes straight to home; 2.6 inserts the debrief between Wave Check and home.
+**Open: Phase 2 closeout (vibes check) + Phase 5 stare-test on Bailey, then pick the next high-value direction.** Strongest candidates ranked: Phase 7 Future Self Voice Notes (deepest emotional hook); Phase 4 Body route + Sensory Swaps (concrete tools, ~50 hand-curated entries); Phase 6 fill-in mood protocols (Lonely / Tired / Bored / Numb / Rage); local notifications for daily check-ins.
 
 ## Where We Left Off
 
@@ -66,6 +62,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - Wren's voice is friend-on-the-floor, not calm-presenter. First draft of co-regulation phrases used therapy-stock affirmations ("i see you", "your body is doing the work") and read cheesy. Rewrote to observational/plainspoken: `yeah, this is hard.` / `no rush.` / `it'll pass. it always does.` Less self-announcing, fewer "i" frames, no instruction.
 - The Fork reads as a real choice with three labeled shapes in a triangle, not as overwhelming. Single-tap commits with a soft haptic + brief glow give tactile confirmation without making the user "discover" what each shape means. Bailey's checkpoint: "good, lets move on."
 - The Wave Check slider is the literal wave. Two stroked sine-wave layers (`quellMoon` primary + softer `quellGlow` at phase offset) whose amplitude responds live to the user's drag. Dragging toward "smaller" calms the wave; toward "bigger" amplifies it. The metaphor is the answer — the user reports the wave's state by *being* the wave's state. Bailey's checkpoint: "looks good."
+- Eat Anyway is wired end-to-end via Body → entry → mindful or just-eat → "still here." close. Notifications for the just-eat 20-min ping work via UNUserNotificationCenter; permission requested only at the moment of need. Bailey's signature feature is real.
 
 ## What's Not Working
 
@@ -82,6 +79,14 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Slice 2.6 + Phase 5 (Debrief redesign + Eat Anyway):**
+
+- **Spec deviations honored both ways.** 2.6 spec called for three prompts; Bailey: "i don't want to answer questions." 5.3 also called for a post-eat debrief; same answer. Both shipped as a single `ClosingLineView` parameterized by a line — no save, no questions. Pattern: when a slice spec adds friction the brief's spirit doesn't require, drop it and amend.
+- **`ClosingLineView` is the reusable closer.** Parameterized `line: String`, 3.5s display, fade in via `quellEaseSlow`, then `onComplete`. Two callsites so far: `"thanks for showing up."` (Wave Check smaller) and `"still here."` (Eat Anyway). Likely a third callsite for other "okay, that happened" moments going forward.
+- **Local notifications via `UNUserNotificationCenter`.** First use in `JustEatView` (20-min check-in). Permission requested at the moment of need (user starts JustEat), not at app launch. Denial is silent. Pattern is reusable for other timed pings; should consolidate into a `Notifications/` helper if a second screen needs one.
+- **Routing enum has 11 cases now** (`.stone`, `.coRegulation`, `.fork`, `.mood`, `.anxiousProtocol`, `.waveCheck`, `.coPilot`, `.eatAnywayEntry`, `.eatMindful`, `.eatJust`, `.closingLine(String)`). Note `.closingLine` carries an associated value — works with Equatable since String is Equatable. Refactor to a router type when the enum hits ~15 cases or when sub-flows want their own state.
+- **Plan order isn't strict.** Jumped from Phase 2.6 directly to Phase 5, skipping Phase 3 (Wren character) and Phase 4 (Body route + Sensory Swaps). The brief permits this — when a high-value chunk is reachable and self-contained, build it. Phase 3.2 (Wren's presence) and Phase 4 still need to land before the long-press-on-Wren Eat Anyway access point can be wired.
 
 **Phase 2 — Slices 2.4 + 2.5 (Mood / Anxious protocol / Wave Check / Co-pilot):**
 
@@ -177,7 +182,11 @@ Quell/
         │   ├── MoodView.swift
         │   ├── AnxiousProtocolView.swift
         │   ├── WaveCheckView.swift
-        │   └── CoPilotPlaceholderView.swift
+        │   ├── CoPilotPlaceholderView.swift
+        │   ├── ClosingLineView.swift
+        │   ├── EatAnywayEntryView.swift
+        │   ├── MindfulEatView.swift
+        │   └── JustEatView.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf
