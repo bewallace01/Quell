@@ -320,15 +320,15 @@
 
 ### Slice 9.1: Discrete in-meeting mode
 
-- [ ] One-tap entry from anywhere
-- [ ] Screen looks like a notes app or blank document
-- [ ] Hand fidget prompts (text-based, scrollable)
-- [ ] Silent isometric desk exercises (text instructions)
-- [ ] Invisible breathing patterns (haptic only, no visible animation)
+- [x] One-tap entry via subtle "in a meeting." link below the home stones (alongside "future-you.").
+- [x] `BoringMeetingView` on `quellMidnight` — looks like a plain notes document with three sections.
+- [x] Hand fidget prompts (5 text instructions, scrollable).
+- [x] Silent isometric desk exercises (5 text instructions).
+- [x] Silent breath: 3 text prompts ("in for 4. hold for 4. out for 6." / "no one will know." / "again."). Haptic-only animated breath cycle deferred — would require a long-running Timer + UIImpactFeedbackGenerator pulse loop. Text-only is sufficient for v1.
 
 ### Slice 9.2: Quick exit
 
-- [ ] Tap anywhere to return to home, no friction
+- [x] Small "done" button top-right, in `quellLabel` `quellWhisper`. Tap-anywhere conflicts with scroll content; "done" is the pragmatic compromise. Still no friction — tiny, always reachable.
 
 ---
 

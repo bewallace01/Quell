@@ -12,19 +12,17 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slice 12.1 (Onboarding) + Slice 11.1 (Quick-blur) in one push. App now has a real first-impression and a real stealth feature.
+Wired the remaining home stones (Steady / Wobbling / Need company — were placeholders since Slice 1.4) and shipped Phase 9 (Boring Meeting Protocol) in one push. Home is now complete for both urge and non-urge states.
 
-`OnboardingView` shows 6 tap-to-advance lines from Wren on first launch, gated by `@AppStorage("quell.hasOnboarded")`. Crisis resources mentioned naturally inside the introduction ("if it gets too big, 988 is always one tap away."). Opt-ins (notifications/haptics/audio) deferred to Phase 10.2 Settings.
+New: `BreathingMomentView` — generic breath + Wren phrases + "okay" close on `quellMidnight` (deliberately lighter than urge's `quellAbyss`), with optional extra stone parameter. Reused for Wobbling (6 phrases about "the day's a little off") and Need Company (6 phrases about presence + "text someone" extra stone that opens Messages with `sms:` URL via `openURL`). Steady reuses the existing `ClosingLineView` with "good. nice to see you." — lightest weight, just an acknowledgment.
 
-`DisguiseView` fades over everything from the `RootView` level when the device is shaken. White background, Apple-Notes-style "Notes" header + 6 fake rows with timestamps. Tap anywhere to return. Detected via `ShakeDetector` — a tiny `UIViewControllerRepresentable` that overrides `motionEnded` and posts `.deviceShaken` through `NotificationCenter`. Wired from any screen because it's at the root.
-
-`QuellApp.swift` restructured: now wraps everything in a `RootView` that owns the onboarding gate, the disguise overlay, and the shake listener.
+`BoringMeetingView` — discrete in-meeting mode reachable from a subtle "in a meeting." link beside "future-you." on home. `quellMidnight` background looks like a plain notes document; three sections (hand fidgets / desk exercises / silent breath) with 13 text prompts total, scrollable. Small "done" button top-right to dismiss (tap-anywhere conflicts with scroll). Spec'd haptic-only breath cycle deferred — text instructions are sufficient for v1.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next high-value direction.** Strongest remaining candidates: wire the home stones (Steady / Wobbling / Need company still route to placeholders); Phase 9 Boring Meeting Protocol (covert in-meeting mode); Phase 8 Pattern Detective (needs structured logging infrastructure first); Phase 10.2 Settings (tone toggles, opt-ins, "reset onboarding" debug); Phase 10.3 Crisis resources (proper version with verified numbers).
+**Open: pick next direction.** App is substantively feature-complete. Two paths: the **data path** (Phase 8 Pattern Detective — needs structured logging at every protocol's auto-advance and exit, weekly summary screen) gives meaning to the data the user is generating. The **ship-readiness path** (Phase 10.2 Settings, 10.3 proper crisis resources, 10.4 About + safety, then Phase 12 polish + TestFlight) gets the app launchable. Phase 3 Wren character/presence design is also still open and would unblock the long-press-on-Wren Eat Anyway access point.
 
 ## Where We Left Off
 
@@ -69,6 +67,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - All six moods (Anxious / Lonely / Tired / Bored / Numb / Rage) lead to real protocols now via a generic `MoodProtocolView`. Don't-know on the Fork goes through a 6-area body scan that routes intelligently to Eat Anyway or co-regulation. The urge flow has no placeholder leaves left.
 - Body route is the spec'd sensory icon picker, not an Eat Anyway shortcut. ~20 swaps across crunch / cold / warm / sweet / salty are real concrete suggestions with "why it works" copy. Easy to extend: add to `SensorySwapStore.seedSwaps()`.
 - First impression and stealth are real. Onboarding introduces Wren in 6 soft lines on first launch. Quick-blur disguises the app as a fake Notes screen on shake from any screen. Two of the brand's most distinctive surfaces are live.
+- Home is complete for all four states — Steady acknowledges and closes, Wobbling and Need Company route to soft breathing moments, In It runs the full urge flow. Plus stealth utility "in a meeting." reachable from anywhere via a subtle home link.
 
 ## What's Not Working
 
@@ -85,6 +84,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Home stones + Phase 9 (Boring Meeting):**
+
+- **`BreathingMomentView` is the generic "soft breath moment" component.** Distinct from `CoRegulationView` (heavier, urge-flow framing, 8s held silence, "skip ahead" to Fork) — `BreathingMomentView` is a 240pt orb + Wren phrases + "okay" close on `quellMidnight`. Use this for any future "presence moment" that doesn't need the full urge flow. Optional `extra` stone parameter for screen-specific actions.
+- **Tonal world hierarchy is now three-tier**: `quellMidnight` (home + light moments) / `quellAbyss` (urge-flow interior) / pure white (`DisguiseView` only). When introducing future surfaces, place them by emotional weight in this hierarchy.
+- **Tap-anywhere-to-dismiss conflicts with ScrollView content.** `BoringMeetingView` uses a tiny "done" button instead. Pattern: when content needs to scroll, give a small explicit dismiss; reserve tap-anywhere for non-scrolling presence screens.
+- **`sms:` URL via `@Environment(\.openURL)`** opens iOS Messages with no recipient. User picks contact themselves. Same pattern as `tel:988` in `CoPilotPlaceholderView`. Both work without contacts permission.
 
 **Onboarding + Quick-blur (12.1 + 11.1):**
 
@@ -230,7 +236,9 @@ Quell/
         │   ├── BodyRouteView.swift
         │   ├── SensorySwapsView.swift
         │   ├── OnboardingView.swift
-        │   └── DisguiseView.swift
+        │   ├── DisguiseView.swift
+        │   ├── BreathingMomentView.swift
+        │   └── BoringMeetingView.swift
         ├── Storage/
         │   ├── VoiceNoteStore.swift
         │   └── SensorySwapStore.swift

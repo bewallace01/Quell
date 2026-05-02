@@ -20,6 +20,9 @@ struct PlaceholderHomeView: View {
         case voiceRecord
         case bodyRoute
         case sensorySwaps(SensoryCategory)
+        case wobbling
+        case needCompany
+        case boringMeeting
     }
 
     @State private var orbVisible = false
@@ -91,6 +94,33 @@ struct PlaceholderHomeView: View {
                         )
                     case .sensorySwaps(let cat):
                         SensorySwapsView(category: cat, onDismiss: dismiss)
+                    case .wobbling:
+                        BreathingMomentView(
+                            phrases: [
+                                "the day's a little off.",
+                                "you don't have to fix it.",
+                                "still here with you.",
+                                "no big deal.",
+                                "let your shoulders drop.",
+                                "okay. just be here.",
+                            ],
+                            onComplete: dismiss
+                        )
+                    case .needCompany:
+                        BreathingMomentView(
+                            phrases: [
+                                "you're not alone in this minute.",
+                                "i'm here.",
+                                "want to text someone you trust?",
+                                "or just sit with me.",
+                                "no need to perform.",
+                                "still here.",
+                            ],
+                            onComplete: dismiss,
+                            extra: ("text someone", openMessages)
+                        )
+                    case .boringMeeting:
+                        BoringMeetingView(onDismiss: dismiss)
                     }
                 }
                 .transition(.opacity)
@@ -128,16 +158,29 @@ struct PlaceholderHomeView: View {
                 .padding(.horizontal, .quellSpace7)
                 .opacity(stonesVisible ? 1 : 0)
 
-                Button {
-                    route(to: .voiceNotes)
-                } label: {
-                    Text("future-you.")
-                        .font(.quellCaption)
-                        .foregroundStyle(Color.quellWhisper)
-                        .padding(.vertical, .quellSpace3)
-                        .padding(.horizontal, .quellSpace5)
+                HStack(spacing: .quellSpace6) {
+                    Button {
+                        route(to: .voiceNotes)
+                    } label: {
+                        Text("future-you.")
+                            .font(.quellCaption)
+                            .foregroundStyle(Color.quellWhisper)
+                            .padding(.vertical, .quellSpace3)
+                            .padding(.horizontal, .quellSpace4)
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        route(to: .boringMeeting)
+                    } label: {
+                        Text("in a meeting.")
+                            .font(.quellCaption)
+                            .foregroundStyle(Color.quellWhisper)
+                            .padding(.vertical, .quellSpace3)
+                            .padding(.horizontal, .quellSpace4)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 .opacity(stonesVisible ? 1 : 0)
             }
         }
@@ -155,9 +198,24 @@ struct PlaceholderHomeView: View {
     }
 
     private func select(_ word: String) {
-        let dest: Destination = (word == "In it") ? .coRegulation : .stone(word)
+        let dest: Destination
+        switch word {
+        case "In it": dest = .coRegulation
+        case "Steady": dest = .closingLine("good. nice to see you.")
+        case "Wobbling": dest = .wobbling
+        case "Need company": dest = .needCompany
+        default: dest = .stone(word)
+        }
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
             destination = dest
+        }
+    }
+
+    @Environment(\.openURL) private var openURL
+
+    private func openMessages() {
+        if let url = URL(string: "sms:") {
+            openURL(url)
         }
     }
 
