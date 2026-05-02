@@ -12,13 +12,19 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed all of Phase 4 (Body route + Sensory Swaps). The Fork's Body choice no longer shortcuts to Eat Anyway; it enters `BodyRouteView` ("what does your body actually want?") with five sensory texture squares (crunch / cold / warm / sweet / salty) plus an "i want food" stone. Each category routes to `SensorySwapsView(category:)` — a combined browse + detail screen using internal `selected` state and `.transition(.opacity)` to swap between modes. ~20 hand-curated swaps (4 per category) seeded inline in `SensorySwapStore`; spec called for 50, v1 ships smaller and Bailey can extend the seed array without a new slice. "i'll try this" on the detail closes to home; "i want food" routes to the existing Eat Anyway entry.
+Closed Slice 12.1 (Onboarding) + Slice 11.1 (Quick-blur) in one push. App now has a real first-impression and a real stealth feature.
+
+`OnboardingView` shows 6 tap-to-advance lines from Wren on first launch, gated by `@AppStorage("quell.hasOnboarded")`. Crisis resources mentioned naturally inside the introduction ("if it gets too big, 988 is always one tap away."). Opt-ins (notifications/haptics/audio) deferred to Phase 10.2 Settings.
+
+`DisguiseView` fades over everything from the `RootView` level when the device is shaken. White background, Apple-Notes-style "Notes" header + 6 fake rows with timestamps. Tap anywhere to return. Detected via `ShakeDetector` — a tiny `UIViewControllerRepresentable` that overrides `motionEnded` and posts `.deviceShaken` through `NotificationCenter`. Wired from any screen because it's at the root.
+
+`QuellApp.swift` restructured: now wraps everything in a `RootView` that owns the onboarding gate, the disguise overlay, and the shake listener.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next high-value direction.** Strongest remaining candidates: Phase 12.1 onboarding (first-launch Wren introduction — every user sees this); Phase 11.1 Quick-blur stealth (shake-to-disguise); Phase 9 Boring Meeting Protocol (covert in-meeting mode, accessible from anywhere); Phase 8 Pattern Detective (needs structured logging infrastructure first); Phase 3 Wren character avatar / presence design (would unblock the long-press-on-Wren Eat Anyway access point). Steady / Wobbling / Need company stones on home still go to placeholder destinations.
+**Open: pick next high-value direction.** Strongest remaining candidates: wire the home stones (Steady / Wobbling / Need company still route to placeholders); Phase 9 Boring Meeting Protocol (covert in-meeting mode); Phase 8 Pattern Detective (needs structured logging infrastructure first); Phase 10.2 Settings (tone toggles, opt-ins, "reset onboarding" debug); Phase 10.3 Crisis resources (proper version with verified numbers).
 
 ## Where We Left Off
 
@@ -62,6 +68,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - Voice notes are recordable and play back inline during co-regulation. Max 5, local-only, mic permission requested at moment of need. The deepest emotional hook in the brief is now real — your sober self can record a note for your future-overwhelmed self.
 - All six moods (Anxious / Lonely / Tired / Bored / Numb / Rage) lead to real protocols now via a generic `MoodProtocolView`. Don't-know on the Fork goes through a 6-area body scan that routes intelligently to Eat Anyway or co-regulation. The urge flow has no placeholder leaves left.
 - Body route is the spec'd sensory icon picker, not an Eat Anyway shortcut. ~20 swaps across crunch / cold / warm / sweet / salty are real concrete suggestions with "why it works" copy. Easy to extend: add to `SensorySwapStore.seedSwaps()`.
+- First impression and stealth are real. Onboarding introduces Wren in 6 soft lines on first launch. Quick-blur disguises the app as a fake Notes screen on shake from any screen. Two of the brand's most distinctive surfaces are live.
 
 ## What's Not Working
 
@@ -78,6 +85,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Onboarding + Quick-blur (12.1 + 11.1):**
+
+- **`RootView` is the new app root.** It owns the onboarding gate, the disguise overlay, and the global shake listener. New global features should go here, not on individual screens. `QuellApp` is now just `WindowGroup { RootView() }`.
+- **`@AppStorage` is the lightweight persistence pattern** for one-off boolean flags like `hasOnboarded`. Use UserDefaults JSON encoding (like `VoiceNoteStore`) for structured data; `@AppStorage` for simple flags and toggles.
+- **`ShakeDetector` UIViewControllerRepresentable** is the SwiftUI-native way to capture device shake. SwiftUI doesn't have native shake detection; the responder chain via UIViewController + NotificationCenter is the cleanest bridge. Pattern reusable for any iOS responder-chain event SwiftUI doesn't surface natively.
+- **DisguiseView is intentionally non-Quell-branded.** White background, system fonts, Apple-Notes-style content. The point is "this looks like nothing." If we ever want a Quell-branded "calm" mode that's not a stealth disguise, that's a different feature.
 
 **Phase 4 (Body route + Sensory Swaps):**
 
@@ -194,7 +208,8 @@ Quell/
         │   ├── BreathingShape.swift
         │   ├── WordStone.swift
         │   ├── WrenLine.swift
-        │   └── SoftSlider.swift
+        │   ├── SoftSlider.swift
+        │   └── ShakeDetector.swift
         ├── Screens/
         │   ├── PlaceholderHomeView.swift
         │   ├── StoneDestinationView.swift
@@ -213,7 +228,9 @@ Quell/
         │   ├── RecordVoiceNoteView.swift
         │   ├── VoiceNotesListView.swift
         │   ├── BodyRouteView.swift
-        │   └── SensorySwapsView.swift
+        │   ├── SensorySwapsView.swift
+        │   ├── OnboardingView.swift
+        │   └── DisguiseView.swift
         ├── Storage/
         │   ├── VoiceNoteStore.swift
         │   └── SensorySwapStore.swift

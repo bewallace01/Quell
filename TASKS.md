@@ -366,8 +366,10 @@
 
 ### Slice 11.1: Quick-blur
 
-- [ ] Shake phone or double-tap back → instant switch to neutral notes-app-looking screen
-- [ ] Return on tap
+- [x] Shake phone → `DisguiseView` fades over everything from the `RootView` level. Detected via `ShakeDetector` (UIViewControllerRepresentable that overrides `motionEnded` and posts `Notification.Name.deviceShaken`).
+- [x] DisguiseView: white background, Apple-Notes-style "Notes" header in 34pt bold + 6 fake row entries (groceries / ideas / to-do / weekend plans / wifi password / birthday list) with system fonts and timestamp captions. Looks like nothing in the Quell brand.
+- [x] Return on tap anywhere.
+- [ ] Double-tap back as alternative trigger — not shipped. Less standard gesture, harder to implement reliably; shake is the iOS-native disguise gesture.
 
 ### Slice 11.2: Disguise mode
 
@@ -386,9 +388,9 @@
 
 ### Slice 12.1: Onboarding
 
-- [ ] First-launch flow: Wren introduces itself, philosophy stated softly, no questionnaire
-- [ ] Optional opt-ins for notifications, haptics, audio
-- [ ] Crisis resources mentioned naturally
+- [x] First-launch flow gated by `@AppStorage("quell.hasOnboarded")`. `OnboardingView` shows 6 tap-to-advance lines in `quellDisplay` on `quellMidnight`: "hi." / "i'm wren." / "i'm here when the urge is loud, when the wave is rising, when you need a minute." / "no fixing. just presence." / "if it gets too big, 988 is always one tap away." / "ready when you are." Each fades out then in via `quellEaseSlow` (700ms gap). Last tap completes and dissolves into the home.
+- [x] Crisis resources mentioned naturally (the "988" line is embedded in the introduction, not as a separate screen).
+- [ ] Optional opt-ins for notifications, haptics, audio — deferred to Phase 10.2 Settings. Notifications already prompt at moment of need (JustEat). Haptic/audio tone preferences belong in Settings.
 
 ### Slice 12.2: App icon
 
