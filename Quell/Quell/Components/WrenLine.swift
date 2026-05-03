@@ -24,11 +24,18 @@ struct WrenLine: View {
                     try? await Task.sleep(for: .seconds(.quellDurSlow))
 
                     index = (index + 1) % phrases.count
+                    WrenSpeaker.shared.speak(phrases[index])
 
                     withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
                         visible = true
                     }
                 }
+            }
+            .onAppear {
+                WrenSpeaker.shared.speak(phrases[index])
+            }
+            .onDisappear {
+                WrenSpeaker.shared.stop()
             }
     }
 }

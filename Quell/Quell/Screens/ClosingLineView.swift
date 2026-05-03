@@ -27,6 +27,7 @@ struct ClosingLineView: View {
         }
         .onAppear {
             LogStore.shared.log("close")
+            WrenSpeaker.shared.speak(line)
             withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
                 visible = true
             }

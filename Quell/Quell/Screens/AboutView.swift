@@ -34,6 +34,9 @@ struct AboutView: View {
 
                     paragraph("this app is a supplement to professional care, not a replacement. if you're struggling, please reach out to a clinician.")
 
+                    paragraph("a note on wren's voice. wren reads aloud using ios speech. for a much more human-sounding voice, install a premium english voice in ios settings → accessibility → spoken content → voices. without one, wren will sound a bit robotic.")
+                        .foregroundStyle(Color.quellMist)
+
                     paragraph("clinical advisor: tbd.")
                         .foregroundStyle(Color.quellWhisper)
 

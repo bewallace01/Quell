@@ -94,6 +94,8 @@ struct ExerciseView: View {
                 withAnimation(.quellEaseSlow(duration: .quellDurSlow)) { visible = true }
             }
 
+            WrenSpeaker.shared.speak(phase.text)
+
             phaseStart = Date()
             let until = Date().addingTimeInterval(phase.duration)
             while Date() < until {
@@ -110,11 +112,13 @@ struct ExerciseView: View {
             phaseIndex = exercise.phases.count
             withAnimation(.quellEaseSlow(duration: .quellDurSlow)) { visible = true }
             elapsedTotal = exercise.totalSeconds
+            WrenSpeaker.shared.speak("done.")
         }
     }
 
     private func end() {
         task?.cancel()
+        WrenSpeaker.shared.stop()
         onComplete()
     }
 }
