@@ -32,6 +32,7 @@ struct PlaceholderHomeView: View {
         case steady
         case movementLibrary
         case exercise(Exercise)
+        case anchorPeople
     }
 
     @State private var orbVisible = false
@@ -65,7 +66,7 @@ struct PlaceholderHomeView: View {
                             onRagePad: { route(to: .ragePad) }
                         )
                     case .dontKnowScan:
-                        DontKnowScanView(onComplete: completeScan)
+                        BodyTapScanView(onComplete: completeScan)
                     case .ragePad:
                         RagePadView(onDismiss: { route(to: .moodProtocol(.rage)) })
                     case .waveCheck:
@@ -75,6 +76,7 @@ struct PlaceholderHomeView: View {
                             onCrisis: { route(to: .crisis) },
                             onAbout: { route(to: .about) },
                             onPatterns: { route(to: .patterns) },
+                            onAnchorPeople: { route(to: .anchorPeople) },
                             onDismiss: dismiss
                         )
                     case .crisis:
@@ -123,7 +125,7 @@ struct PlaceholderHomeView: View {
                         BreathingMomentView(
                             phrases: WrenVoice.needCompany,
                             onComplete: dismiss,
-                            extra: ("text someone", openMessages)
+                            extras: anchorExtras()
                         )
                     case .boringMeeting:
                         BoringMeetingView(onDismiss: dismiss)
@@ -154,6 +156,8 @@ struct PlaceholderHomeView: View {
                         ExerciseView(exercise: exercise) {
                             route(to: .movementLibrary)
                         }
+                    case .anchorPeople:
+                        AnchorPeopleView(onDismiss: dismiss)
                     }
                 }
                 .transition(.opacity)
@@ -242,6 +246,25 @@ struct PlaceholderHomeView: View {
 
     private func openMessages() {
         if let url = URL(string: "sms:") {
+            openURL(url)
+        }
+    }
+
+    private func anchorExtras() -> [ExtraAction] {
+        let people = AnchorPeopleStore.shared.people
+        guard !people.isEmpty else {
+            return [ExtraAction(label: "text someone", perform: openMessages)]
+        }
+        return people.map { person in
+            ExtraAction(label: "text \(person.name.lowercased())") {
+                textAnchor(person)
+            }
+        }
+    }
+
+    private func textAnchor(_ person: AnchorPerson) {
+        let cleaned = person.phoneNumber.filter { $0.isNumber || $0 == "+" }
+        if let url = URL(string: "sms:\(cleaned)") {
             openURL(url)
         }
     }

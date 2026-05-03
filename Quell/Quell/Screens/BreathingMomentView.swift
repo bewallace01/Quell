@@ -1,10 +1,16 @@
 import SwiftUI
 
+struct ExtraAction: Identifiable {
+    let id = UUID()
+    let label: String
+    let perform: () -> Void
+}
+
 struct BreathingMomentView: View {
 
     let phrases: [String]
     let onComplete: () -> Void
-    var extra: (label: String, perform: () -> Void)? = nil
+    var extras: [ExtraAction] = []
 
     @State private var orbVisible = false
     @State private var wrenVisible = false
@@ -29,7 +35,7 @@ struct BreathingMomentView: View {
                     .opacity(orbVisible ? 1 : 0)
 
                 VStack(spacing: .quellSpace5) {
-                    if let extra {
+                    ForEach(extras) { extra in
                         WordStone(label: extra.label) { extra.perform() }
                     }
                     WordStone(label: "okay") {
