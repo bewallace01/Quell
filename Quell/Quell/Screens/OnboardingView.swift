@@ -25,6 +25,8 @@ struct OnboardingView: View {
         .onTapGesture {
             advance()
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(step >= lines.count - 1 ? "tap to begin." : "tap to continue.")
         .onAppear {
             withAnimation(.quellEaseSlow(duration: .quellDurSlow).delay(0.4)) {
                 visible = true

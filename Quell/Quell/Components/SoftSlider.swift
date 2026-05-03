@@ -63,6 +63,27 @@ struct SoftSlider: View {
             )
         }
         .frame(height: touchHeight)
+        .accessibilityElement()
+        .accessibilityLabel("the wave")
+        .accessibilityValue(accessibilityValueText)
+        .accessibilityHint("adjust to report whether the urge is bigger, the same, or smaller. release to commit.")
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment:
+                value = min(value + 0.1, 1)
+            case .decrement:
+                value = max(value - 0.1, 0)
+            @unknown default:
+                break
+            }
+            onCommit()
+        }
+    }
+
+    private var accessibilityValueText: String {
+        if value < 0.33 { return "bigger" }
+        if value > 0.67 { return "smaller" }
+        return "the same"
     }
 }
 

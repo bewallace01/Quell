@@ -63,6 +63,7 @@ struct VoiceNotesListView: View {
                     .foregroundStyle(Color.quellGlow)
                     .frame(minWidth: 44, minHeight: 44)
             }
+            .accessibilityLabel(playingID == note.id ? "stop note from \(note.displayDate)" : "play note from \(note.displayDate)")
 
             Button {
                 deleteNote(note)
@@ -72,6 +73,7 @@ struct VoiceNotesListView: View {
                     .foregroundStyle(Color.quellWhisper)
                     .frame(minWidth: 44, minHeight: 44)
             }
+            .accessibilityLabel("delete note from \(note.displayDate)")
         }
     }
 

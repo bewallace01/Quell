@@ -118,11 +118,13 @@ struct SettingsView: View {
                 Text("›")
                     .font(.quellBody)
                     .foregroundStyle(Color.quellWhisper)
+                    .accessibilityHidden(true)
             }
             .padding(.vertical, .quellSpace3)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(label)
     }
 }
 

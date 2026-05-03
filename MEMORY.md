@@ -12,9 +12,9 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Slice 3.1 (WrenVoice centralization). Pure refactor, zero behavior change. New `DesignSystem/WrenVoice.swift` consolidates Wren's iterated voice content into one file: onboarding lines, co-regulation phrases, six mood protocol phrase sets, wobbling + needCompany phrase sets, mindful eat guidance, eat-anyway prompts, just-eat notification copy, wave check prompts + result lines, three closing line variants, and the patterns reflection function. Eight views now read from it instead of having phrases inline. The principle is documented at the top of the file: friend-on-the-floor, not calm-presenter, plainspoken, no therapy-stock affirmations, fewer "i" frames.
+Code-side polish pass for accessibility. Biggest functional gap was `SoftSlider` — VoiceOver users couldn't adjust a custom slider since iOS's built-in `Slider` accessibility doesn't apply. Added `accessibilityAdjustableAction` (10% increments per VoiceOver swipe), label ("the wave"), value ("bigger"/"the same"/"smaller"), and a hint about commit-on-release. Also: `OnboardingView` now has a tap-to-continue accessibility hint so VoiceOver users know the screen is interactive; `VoiceNotesListView` rows include the date in the play/delete labels ("play note from may 2"); Settings chevrons (`›`) are hidden from VoiceOver so the row label reads cleanly.
 
-Skipped centralizing single-word UI prompts ("what is it?", "where is it now?"), section titles, About paragraphs (separate philosophy concern), Boring Meeting list (unique format), and pure interface text ("nothing saved yet."). They stay inline.
+Visual polish (transitions, spacing on smaller iPhones, copy on screen) needs Bailey's eyes on the simulator. I can fix from a list but can't see what feels off in motion.
 
 ## Active Slice
 
