@@ -21,6 +21,9 @@ struct SettingsView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             ScrollView {
                 VStack(alignment: .leading, spacing: .quellSpace7) {
                     Text("settings")

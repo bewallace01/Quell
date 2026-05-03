@@ -15,6 +15,9 @@ struct BreathingMomentView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 WrenLine(phrases: phrases, interval: .seconds(20))
                     .opacity(wrenVisible ? 1 : 0)

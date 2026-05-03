@@ -16,6 +16,9 @@ struct MoodProtocolView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 WrenLine(phrases: phrases, interval: .seconds(30))
                     .opacity(wrenVisible ? 1 : 0)

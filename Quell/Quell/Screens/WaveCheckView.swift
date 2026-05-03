@@ -21,6 +21,9 @@ struct WaveCheckView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace7) {
                 Text(WrenVoice.waveCheckPrompt)
                     .font(.quellTitle)

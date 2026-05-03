@@ -134,6 +134,9 @@ struct PlaceholderHomeView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 Text("right now i'm…")
                     .font(.quellTitle)

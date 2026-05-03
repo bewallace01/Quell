@@ -19,6 +19,9 @@ struct ForkView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             ZStack {
                 ForkOption(
                     choice: .body,

@@ -15,6 +15,9 @@ struct VoiceNotesListView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace7) {
                 Text("future-you.")
                     .font(.quellTitle)

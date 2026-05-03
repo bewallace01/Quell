@@ -14,6 +14,9 @@ struct SensorySwapsView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             if let swap = selected {
                 detailView(swap)
                     .transition(.opacity)

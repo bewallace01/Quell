@@ -22,6 +22,9 @@ struct RecordVoiceNoteView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             switch phase {
             case .initial:
                 initialView

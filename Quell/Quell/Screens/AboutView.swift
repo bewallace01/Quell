@@ -11,6 +11,9 @@ struct AboutView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             ScrollView {
                 VStack(alignment: .leading, spacing: .quellSpace6) {
                     Text("quell.")

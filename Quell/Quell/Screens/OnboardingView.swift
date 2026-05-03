@@ -14,6 +14,9 @@ struct OnboardingView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             Text(lines[min(step, lines.count - 1)])
                 .font(.quellDisplay)
                 .foregroundStyle(Color.quellCream)

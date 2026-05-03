@@ -26,6 +26,9 @@ struct DontKnowScanView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 Text("your \(Area.allCases[index].rawValue)?")
                     .font(.quellTitle)

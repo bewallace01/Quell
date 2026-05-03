@@ -13,6 +13,9 @@ struct EatAnywayEntryView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 Text(WrenVoice.eatAnywayEntryPrompt)
                     .font(.quellDisplay)

@@ -16,6 +16,9 @@ struct PatternsView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace7) {
                 Text("showing up.")
                     .font(.quellTitle)

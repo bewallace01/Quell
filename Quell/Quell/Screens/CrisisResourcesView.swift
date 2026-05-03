@@ -13,6 +13,9 @@ struct CrisisResourcesView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             ScrollView {
                 VStack(spacing: .quellSpace7) {
                     Text("more support is here.")

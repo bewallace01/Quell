@@ -14,6 +14,9 @@ struct BodyRouteView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace7) {
                 Text("what does your body actually want?")
                     .font(.quellTitle)

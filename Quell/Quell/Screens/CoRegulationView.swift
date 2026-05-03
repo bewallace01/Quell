@@ -18,6 +18,9 @@ struct CoRegulationView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 WrenLine(phrases: WrenVoice.coRegulation, interval: .seconds(22))
                     .opacity(promptVisible ? 1 : 0)

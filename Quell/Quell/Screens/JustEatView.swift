@@ -15,6 +15,9 @@ struct JustEatView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 Text(WrenVoice.justEatPrompt)
                     .font(.quellTitle)

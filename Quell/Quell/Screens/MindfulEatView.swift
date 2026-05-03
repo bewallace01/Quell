@@ -18,6 +18,9 @@ struct MindfulEatView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             if started {
                 ambientScreen
             } else {

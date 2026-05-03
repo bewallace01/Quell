@@ -12,6 +12,9 @@ struct ClosingLineView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             Text(line)
                 .font(.quellDisplay)
                 .foregroundStyle(Color.quellCream)

@@ -12,6 +12,9 @@ struct StoneDestinationView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             Text(word)
                 .font(.quellDisplay)
                 .foregroundStyle(Color.quellCream)

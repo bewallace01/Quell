@@ -23,6 +23,9 @@ struct MoodView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            BioluminescentField()
+                .ignoresSafeArea()
+
             VStack(spacing: .quellSpace8) {
                 Text("what is it?")
                     .font(.quellTitle)
