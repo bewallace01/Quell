@@ -5,6 +5,7 @@ struct SettingsView: View {
 
     let onCrisis: () -> Void
     let onAbout: () -> Void
+    let onPatterns: () -> Void
     let onDismiss: () -> Void
 
     @AppStorage("quell.audioEnabled") private var audioEnabled = true
@@ -39,6 +40,10 @@ struct SettingsView: View {
                                 openURL(url)
                             }
                         }
+                    }
+
+                    sectionGroup(title: "your patterns") {
+                        rowButton("showing up") { onPatterns() }
                     }
 
                     sectionGroup(title: "safety") {
@@ -122,5 +127,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(onCrisis: {}, onAbout: {}, onDismiss: {})
+    SettingsView(onCrisis: {}, onAbout: {}, onPatterns: {}, onDismiss: {})
 }

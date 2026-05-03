@@ -25,6 +25,7 @@ struct PlaceholderHomeView: View {
         case settings
         case crisis
         case about
+        case patterns
     }
 
     @State private var orbVisible = false
@@ -67,12 +68,15 @@ struct PlaceholderHomeView: View {
                         SettingsView(
                             onCrisis: { route(to: .crisis) },
                             onAbout: { route(to: .about) },
+                            onPatterns: { route(to: .patterns) },
                             onDismiss: dismiss
                         )
                     case .crisis:
                         CrisisResourcesView(onDismiss: dismiss)
                     case .about:
                         AboutView(onDismiss: dismiss)
+                    case .patterns:
+                        PatternsView(onDismiss: dismiss)
                     case .eatAnywayEntry:
                         EatAnywayEntryView(
                             onMindful: { route(to: .eatMindful) },

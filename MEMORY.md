@@ -12,19 +12,17 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Phase 10.2 (Settings) + 10.3 (Crisis resources) + 10.4 (About). App is now ship-ready in scope; missing pieces are app icon + verified NEDA number + clinical advisor credit (all design/content tasks, not code).
+Closed Phase 8 (Pattern Detective lean version) + Phase 10.1 (engagement heat map) in one push. App now collects local-only logs and surfaces them as a calendar grid with a single Wren reflection.
 
-`SettingsView` reachable from new `settings.` link on home (third in the row beside `future-you.` and `in a meeting.`). Sections: feedback (haptic toggle wired to WordStone via @AppStorage; audio toggle persisted but not wired), system (notifications button opens iOS Settings via `UIApplication.openSettingsURLString`), safety (crisis / about), debug (reset onboarding). Wren tone preference and stealth toggles deferred — no content/feature variation to toggle yet.
+`LogStore` (UserDefaults, JSON-encoded, 365-day retention) records `LogEvent { timestamp, kind }` from three terminal hooks: Wave Check completion (`wave-bigger/same/smaller`), `ClosingLineView.onAppear` (`close`), `BreathingMomentView` "okay" (`soft-presence`). Richer kinds (mood, tool, trigger) deferred — current data is enough for v1 heat map + engagement reflection.
 
-`CrisisResourcesView` consolidates the old `CoPilotPlaceholderView` (deleted). Three tap-to-action resources: 988 (suicide & crisis lifeline), 741741 (crisis text line, body=HOME), 911. Footer: "this app is a supplement to professional care. not a replacement." NEDA helpline excluded until Bailey verifies the number. Reachable from Settings (2 taps from home) and direct from Wave Check `.bigger`.
-
-`AboutView` — "quell." + "no fixing. just presence." + four paragraphs (philosophy / privacy / clinical care reminder / advisor TBD). Privacy promise codified: "everything you save stays on your device. no cloud sync. no tracking. no analytics. your patterns are yours."
+`PatternsView` (Settings → "your patterns" → "showing up") shows a 5-week × 7-day calendar grid: engaged days light up with `quellGlow` + a glow shadow, gaps stay dim `quellShade`, future cells dimmer. Above the grid: a single Wren-voiced reflection line that scales with this-week engagement count ("nothing here yet. that's okay too." / "you've been showing up. that counts." / "you've been here a lot this week."). No numbers, no streaks, no shaming. Cluster detection ("urges cluster Mon evenings") deferred until richer kind tags land.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next direction.** Settings + crisis + about all shipped. Code-side ship-readiness is largely complete. Remaining open work: Phase 8 Pattern Detective (data path — would also wire Slice 10.1 engagement heat map). App icon design (Phase 12.2 — design work, not code). NEDA helpline number to verify. Clinical advisor to secure. TestFlight build/upload (Phase 12.3 — needs Apple Developer enrollment).
+**Open: pick next direction.** App is feature-complete for v1. Remaining code-side work: Phase 3.1 WrenVoice centralization (move all hardcoded phrase arrays into a single file by context — refactor, no behavior change); polish/flow validation (walk every screen, fix rough edges); Phase 11.3 notification copy unification (only one notification exists today). Outside-of-code: NEDA verified number, clinical advisor credit, app icon design, Apple Developer enrollment + TestFlight, App Store listing + privacy policy + screenshots.
 
 ## Where We Left Off
 
@@ -71,6 +69,7 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - First impression and stealth are real. Onboarding introduces Wren in 6 soft lines on first launch. Quick-blur disguises the app as a fake Notes screen on shake from any screen. Two of the brand's most distinctive surfaces are live.
 - Home is complete for all four states — Steady acknowledges and closes, Wobbling and Need Company route to soft breathing moments, In It runs the full urge flow. Plus stealth utility "in a meeting." reachable from anywhere via a subtle home link.
 - App is ship-ready in scope: settings, crisis resources, about page, onboarding, stealth all live. Remaining holes are content-side (NEDA verified number, clinical advisor credit, app icon design) and a real TestFlight build, not code.
+- Patterns/heat map is live. Local-only logs at terminal hooks; calendar grid in `PatternsView` lights up days the user engaged. The data doesn't punish gaps — it celebrates showing up.
 
 ## What's Not Working
 
@@ -87,6 +86,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Phase 8 + 10.1 (Patterns / heat map):**
+
+- **`LogStore` follows the same pattern as `VoiceNoteStore`**: `@MainActor final class ObservableObject` + `static let shared` + UserDefaults JSON. Use this template for any future local-only data layer.
+- **Logging at terminal hooks, not transitions.** Three hooks cover the meaningful sessions: Wave Check (urge resolved), ClosingLineView (any flow that ends with a closing line), BreathingMomentView (Wobbling/Need-Company). Don't sprinkle log calls everywhere — terminal points only, otherwise the data gets noisy.
+- **Calendar grid uses `LogStore.calendarGrid(weeks:)`** which returns `[[Date]]` rows of day-starts. Convert today + N days to a 7-wide week-major layout with `Calendar.startOfDay(for:)`.
+- **Reflection scales with engagement count, never numerical.** "you've been here a lot this week." beats "5 sessions this week." If summary copy ever needs to expose a number, that's a brand violation — find a phrasing that doesn't.
 
 **Phase 10.2 + 10.3 + 10.4 (Settings, Crisis, About):**
 
@@ -252,10 +258,12 @@ Quell/
         │   ├── BoringMeetingView.swift
         │   ├── SettingsView.swift
         │   ├── CrisisResourcesView.swift
-        │   └── AboutView.swift
+        │   ├── AboutView.swift
+        │   └── PatternsView.swift
         ├── Storage/
         │   ├── VoiceNoteStore.swift
-        │   └── SensorySwapStore.swift
+        │   ├── SensorySwapStore.swift
+        │   └── LogStore.swift
         └── Fonts/
             ├── Fraunces.ttf
             └── Geist.ttf

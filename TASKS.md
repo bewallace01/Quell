@@ -305,14 +305,15 @@
 
 ### Slice 8.1: Quiet logging
 
-- [ ] Capture trigger tags, time of day, day of week, tool used, wave check outcome
-- [ ] Local Core Data or SwiftData store
+- [x] `LogEvent { id, timestamp, kind: String }` in `Storage/LogStore.swift`. UserDefaults-backed, JSON-encoded, pruned to 365 days. Not Core Data / SwiftData (overkill at this size).
+- [x] Three logging hooks at terminal points: Wave Check completion (`wave-bigger/same/smaller`), `ClosingLineView.onAppear` (`close`), `BreathingMomentView` "okay" (`soft-presence`).
+- [ ] Richer kind tags (mood, tool, trigger) — deferred. Current 3 kinds are enough for v1 heat map and engagement reflection. Mood plumbing through Wave Check would enable per-mood breakdowns later.
 
 ### Slice 8.2: Weekly soft summary
 
-- [ ] Once a week, a gentle reflection: "your urges clustered Mon/Tue evenings this week"
-- [ ] Never punitive. Never numerical bragging or shaming.
-- [ ] Opt-out available
+- [x] `PatternsView` shows a single Wren-voiced reflection line that scales with engagement count: "nothing here yet. that's okay too." / "you've shown up before. be here when you can." / "you've been showing up. that counts." / "you've been here a lot this week. that counts." Never punitive, no numbers.
+- [ ] Cluster detection ("your urges clustered Mon/Tue evenings") — deferred. Needs more event data and time-of-day analysis. Comes naturally once richer kind tags land.
+- [ ] Opt-out — deferred. Logging is currently always-on but local-only and surfaces only via `PatternsView`. If Bailey wants opt-out, add a toggle in Settings → feedback.
 
 ---
 
@@ -336,9 +337,9 @@
 
 ### Slice 10.1: Engagement heat map
 
-- [ ] Calendar-style visualization of urge-flow engagement
-- [ ] Visual celebrates showing up, never punishes gaps
-- [ ] No numbers, no streaks
+- [x] `PatternsView` (Settings → "your patterns" → "showing up") renders a 5-week × 7-day grid of `RoundedRectangle` cells. Engaged days fill with `quellGlow` + a glow shadow; gaps stay dim `quellShade`; future cells dimmer still.
+- [x] No numbers. No streaks. The grid celebrates lit-up days; gaps simply aren't lit.
+- [x] Same-screen Wren reflection above (see 8.2).
 
 ### Slice 10.2: Settings
 

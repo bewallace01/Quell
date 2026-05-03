@@ -76,6 +76,8 @@ struct WaveCheckView: View {
             result = .same
         }
 
+        LogStore.shared.log("wave-\(kindFor(result))")
+
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
             committed = result
         }
@@ -97,6 +99,14 @@ struct WaveCheckView: View {
             return "let's try something else."
         case .smaller:
             return "you're still here. nice work staying."
+        }
+    }
+
+    private func kindFor(_ result: WaveResult) -> String {
+        switch result {
+        case .bigger: return "bigger"
+        case .same: return "same"
+        case .smaller: return "smaller"
         }
     }
 }

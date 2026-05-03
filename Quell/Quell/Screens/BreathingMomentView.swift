@@ -26,7 +26,10 @@ struct BreathingMomentView: View {
                     if let extra {
                         WordStone(label: extra.label) { extra.perform() }
                     }
-                    WordStone(label: "okay") { onComplete() }
+                    WordStone(label: "okay") {
+                        LogStore.shared.log("soft-presence")
+                        onComplete()
+                    }
                 }
                 .opacity(actionsVisible ? 1 : 0)
             }

@@ -20,6 +20,7 @@ struct ClosingLineView: View {
                 .opacity(visible ? 1 : 0)
         }
         .onAppear {
+            LogStore.shared.log("close")
             withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
                 visible = true
             }
