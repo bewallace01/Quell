@@ -1,9 +1,10 @@
 import SwiftUI
 
-struct EatAnywayEntryView: View {
+struct BeforeFoodView: View {
 
-    let onMindful: () -> Void
-    let onJustEat: () -> Void
+    let onHungerCheck: () -> Void
+    let onPreMeal: () -> Void
+    let onDismiss: () -> Void
 
     @State private var promptVisible = false
     @State private var actionsVisible = false
@@ -20,19 +21,15 @@ struct EatAnywayEntryView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: .quellSpace8) {
-                Text(WrenVoice.eatAnywayEntryPrompt)
-                    .font(.quellDisplay)
+                Text("before food.")
+                    .font(.quellTitle)
                     .foregroundStyle(Color.quellCream)
-                    .multilineTextAlignment(.center)
                     .opacity(promptVisible ? 1 : 0)
 
                 VStack(spacing: .quellSpace5) {
-                    WordStone(label: "yes, walk me through") {
-                        onMindful()
-                    }
-                    WordStone(label: "just eat. i'll check back.") {
-                        onJustEat()
-                    }
+                    WordStone(label: "am i hungry?") { onHungerCheck() }
+                    WordStone(label: "ground before eating") { onPreMeal() }
+                    WordStone(label: "back") { onDismiss() }
                 }
                 .opacity(actionsVisible ? 1 : 0)
             }
@@ -42,7 +39,7 @@ struct EatAnywayEntryView: View {
             withAnimation(.quellEaseSlow(duration: .quellDurSlow).delay(0.3)) {
                 promptVisible = true
             }
-            withAnimation(.quellEaseSlow(duration: .quellDurSlow).delay(1.0)) {
+            withAnimation(.quellEaseSlow(duration: .quellDurSlow).delay(0.9)) {
                 actionsVisible = true
             }
         }
@@ -50,5 +47,5 @@ struct EatAnywayEntryView: View {
 }
 
 #Preview {
-    EatAnywayEntryView(onMindful: {}, onJustEat: {})
+    BeforeFoodView(onHungerCheck: {}, onPreMeal: {}, onDismiss: {})
 }

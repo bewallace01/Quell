@@ -16,6 +16,9 @@ struct PatternsView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

@@ -26,6 +26,10 @@ struct PlaceholderHomeView: View {
         case crisis
         case about
         case patterns
+        case beforeFood
+        case hungerCheck
+        case preMeal
+        case steady
     }
 
     @State private var orbVisible = false
@@ -121,6 +125,24 @@ struct PlaceholderHomeView: View {
                         )
                     case .boringMeeting:
                         BoringMeetingView(onDismiss: dismiss)
+                    case .beforeFood:
+                        BeforeFoodView(
+                            onHungerCheck: { route(to: .hungerCheck) },
+                            onPreMeal: { route(to: .preMeal) },
+                            onDismiss: dismiss
+                        )
+                    case .hungerCheck:
+                        HungerCheckView(onComplete: completeHungerCheck)
+                    case .preMeal:
+                        BreathingMomentView(
+                            phrases: WrenVoice.preMeal,
+                            onComplete: dismiss
+                        )
+                    case .steady:
+                        SteadyView(
+                            onLeaveNote: { route(to: .voiceRecord) },
+                            onDismiss: dismiss
+                        )
                     }
                 }
                 .transition(.opacity)
@@ -132,6 +154,9 @@ struct PlaceholderHomeView: View {
     private var home: some View {
         ZStack {
             Color.quellMidnight
+                .ignoresSafeArea()
+
+            JellyfishField()
                 .ignoresSafeArea()
 
             BioluminescentField()
@@ -161,8 +186,9 @@ struct PlaceholderHomeView: View {
                 .padding(.horizontal, .quellSpace7)
                 .opacity(stonesVisible ? 1 : 0)
 
-                HStack(spacing: .quellSpace5) {
+                HStack(spacing: .quellSpace4) {
                     homeLink("future-you.") { route(to: .voiceNotes) }
+                    homeLink("before food.") { route(to: .beforeFood) }
                     homeLink("in a meeting.") { route(to: .boringMeeting) }
                     homeLink("settings.") { route(to: .settings) }
                 }
@@ -186,7 +212,7 @@ struct PlaceholderHomeView: View {
         let dest: Destination
         switch word {
         case "In it": dest = .coRegulation
-        case "Steady": dest = .closingLine(WrenVoice.closingSteady)
+        case "Steady": dest = .steady
         case "Wobbling": dest = .wobbling
         case "Need company": dest = .needCompany
         default: dest = .stone(word)
@@ -252,6 +278,17 @@ struct PlaceholderHomeView: View {
             case .eatAnyway:
                 destination = .eatAnywayEntry
             case .coRegulation:
+                destination = .coRegulation
+            }
+        }
+    }
+
+    private func completeHungerCheck(_ outcome: HungerOutcome) {
+        withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
+            switch outcome {
+            case .hungry:
+                destination = .bodyRoute
+            case .somethingElse:
                 destination = .coRegulation
             }
         }

@@ -14,6 +14,9 @@ struct OnboardingView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

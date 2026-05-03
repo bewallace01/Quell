@@ -23,6 +23,9 @@ struct MoodView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

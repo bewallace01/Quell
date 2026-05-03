@@ -18,6 +18,9 @@ struct MindfulEatView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

@@ -11,6 +11,9 @@ struct AboutView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

@@ -16,6 +16,9 @@ struct MoodProtocolView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

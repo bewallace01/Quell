@@ -27,9 +27,16 @@ struct BioluminescentField: View {
     }
 
     private func draw(particle: Particle, in ctx: GraphicsContext, size: CGSize, t: TimeInterval) {
-        let phaseT = t * particle.driftSpeed * drift + particle.phase
-        let x = particle.baseX * size.width + sin(phaseT) * particle.driftRangeX
-        let y = particle.baseY * size.height + cos(phaseT * 0.7) * particle.driftRangeY
+        // Slow continuous drift across the screen with edge-wrap, plus a small
+        // wobble — like a spec being carried by a gentle ocean current.
+        let driftedX = particle.baseX + particle.velocityX * drift * t
+        let driftedY = particle.baseY + particle.velocityY * drift * t
+        let wobbleX = sin(t * particle.wobbleFreq + particle.phase) * particle.wobbleAmp
+        let wobbleY = cos(t * particle.wobbleFreq * 0.7 + particle.phase) * particle.wobbleAmp
+        let xWrapped = (driftedX + wobbleX).truncatingRemainder(dividingBy: 1)
+        let yWrapped = (driftedY + wobbleY).truncatingRemainder(dividingBy: 1)
+        let x = (xWrapped < 0 ? xWrapped + 1 : xWrapped) * size.width
+        let y = (yWrapped < 0 ? yWrapped + 1 : yWrapped) * size.height
 
         let twinkleT = t * particle.twinkleSpeed + particle.phase
         let alpha = particle.baseAlpha * (0.55 + 0.45 * sin(twinkleT))
@@ -58,12 +65,15 @@ struct BioluminescentField: View {
 }
 
 private struct Particle {
-    var baseX: Double
+    var baseX: Double           // 0...1, initial x as fraction of width
     var baseY: Double
     var baseRadius: Double
-    var driftSpeed: Double
-    var driftRangeX: Double
-    var driftRangeY: Double
+    /// Screen-widths per second. Negative = leftward; positive = rightward.
+    var velocityX: Double
+    /// Screen-heights per second.
+    var velocityY: Double
+    var wobbleFreq: Double      // hz
+    var wobbleAmp: Double       // fraction of screen
     var phase: Double
     var twinkleSpeed: Double
     var baseAlpha: Double
@@ -74,9 +84,10 @@ private struct Particle {
             baseX: Double.random(in: 0...1, using: &g),
             baseY: Double.random(in: 0...1, using: &g),
             baseRadius: Double.random(in: 1.0...3.0, using: &g),
-            driftSpeed: Double.random(in: 0.05...0.18, using: &g),
-            driftRangeX: Double.random(in: 8...28, using: &g),
-            driftRangeY: Double.random(in: 4...14, using: &g),
+            velocityX: Double.random(in: -0.012...0.012, using: &g),
+            velocityY: Double.random(in: -0.008...0.008, using: &g),
+            wobbleFreq: Double.random(in: 0.05...0.18, using: &g),
+            wobbleAmp: Double.random(in: 0.004...0.012, using: &g),
             phase: Double.random(in: 0...(2 * .pi), using: &g),
             twinkleSpeed: Double.random(in: 0.3...0.9, using: &g),
             baseAlpha: Double.random(in: 0.18...0.55, using: &g),

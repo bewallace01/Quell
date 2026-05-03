@@ -128,6 +128,26 @@ enum WrenVoice {
     static let justEatNotificationTitle = "checking back."
     static let justEatNotificationBody = "still here when you want me."
 
+    // MARK: - Before food (preventive)
+
+    /// Hunger-check sequence. Tap-to-advance through these, then commit "hungry"
+    /// or "something else."
+    static let hungerCheck: [String] = [
+        "okay. close your eyes if you want.",
+        "find your stomach. just notice it.",
+        "is there a hollow asking? a real hunger?",
+        "or is it tight? restless? something else?",
+    ]
+
+    /// Pre-meal grounding phrases — rotate during a 60s breath moment before eating.
+    static let preMeal: [String] = [
+        "you're about to eat. nothing wrong with that.",
+        "arrive at the table first.",
+        "feel your seat. your feet on the floor.",
+        "look at the food. smell it.",
+        "no rush. begin when you're ready.",
+    ]
+
     // MARK: - Wave Check
 
     static let waveCheckPrompt = "where is it now?"

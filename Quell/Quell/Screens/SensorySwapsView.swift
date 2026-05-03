@@ -14,6 +14,9 @@ struct SensorySwapsView: View {
             Color.quellAbyss
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

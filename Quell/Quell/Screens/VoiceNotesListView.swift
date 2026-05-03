@@ -15,6 +15,9 @@ struct VoiceNotesListView: View {
             Color.quellMidnight
                 .ignoresSafeArea()
 
+            JellyfishField()
+                .ignoresSafeArea()
+
             BioluminescentField()
                 .ignoresSafeArea()
 

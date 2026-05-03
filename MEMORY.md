@@ -12,9 +12,15 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Code-side polish pass for accessibility. Biggest functional gap was `SoftSlider` — VoiceOver users couldn't adjust a custom slider since iOS's built-in `Slider` accessibility doesn't apply. Added `accessibilityAdjustableAction` (10% increments per VoiceOver swipe), label ("the wave"), value ("bigger"/"the same"/"smaller"), and a hint about commit-on-release. Also: `OnboardingView` now has a tap-to-continue accessibility hint so VoiceOver users know the screen is interactive; `VoiceNotesListView` rows include the date in the play/delete labels ("play note from may 2"); Settings chevrons (`›`) are hidden from VoiceOver so the row label reads cleanly.
+Big atmospheric and feature push, in response to Bailey's feel feedback ("the app feels basic and boring" and "there aren't enough features for it to feel useful").
 
-Visual polish (transitions, spacing on smaller iPhones, copy on screen) needs Bailey's eyes on the simulator. I can fix from a list but can't see what feels off in motion.
+**New preventive features.** `BeforeFoodView` reachable from a fourth `before food.` link on home, with two paths: `HungerCheckView` (4 tap-to-advance Wren prompts about interoception, then commit "hungry" → BodyRoute / "something else" → CoRegulation) and a pre-meal grounding moment (BreathingMomentView with `WrenVoice.preMeal` phrases). `SteadyView` replaces the bare closing-line for the Steady stone — adds an optional "leave a note for future-you" path that routes to voice record. Sensory swap entries expanded from 20 → ~35.
+
+**Atmosphere layers.** Two ethereal `JellyfishField` jellyfish in opposite corners (cool moon upper-right, warm glow lower-left) drifting in slow elliptical orbits around the screen perimeter (~6-8 min full lap), with slow current perturbation + small wobble + bell pulse + halo via single radial gradient (5 stops, no banding). Tentacles are curving Bezier ribbons with compound-wave undulation, per-tentacle parameter variation, and dynamic bias (always flow inward toward center, regardless of jelly's current position). Twinkling sparkle stars near each. `BioluminescentField` particles now drift continuously across the screen with edge-wrap (velocityX ±0.012, velocityY ±0.008 screens/sec), instead of just oscillating in place. Both effects layered behind content on every brand-emotional screen.
+
+**Accessibility polish (earlier in session).** `SoftSlider` now has `accessibilityAdjustableAction`, label, value, hint. `OnboardingView` tap-to-continue hint. `VoiceNotesListView` rows include date in play/delete labels. Settings chevrons hidden from VoiceOver.
+
+**Op note: perl pass mishap.** A `-i` perl invocation with the script's own shebang truncated 22 screen files mid-session. Recovered via `git checkout`. Lesson: when batch-editing in place, use `perl -i -pe '...'` with the inline expression form, not a separate script file with a shebang. Re-applied JellyfishField insertion via the safer `-pe` approach.
 
 ## Active Slice
 
@@ -68,6 +74,8 @@ Things we have not decided yet but will need to soon. Each has a "decide by" pha
 - Home is complete for all four states — Steady acknowledges and closes, Wobbling and Need Company route to soft breathing moments, In It runs the full urge flow. Plus stealth utility "in a meeting." reachable from anywhere via a subtle home link.
 - App is ship-ready in scope: settings, crisis resources, about page, onboarding, stealth all live. Remaining holes are content-side (NEDA verified number, clinical advisor credit, app icon design) and a real TestFlight build, not code.
 - Patterns/heat map is live. Local-only logs at terminal hooks; calendar grid in `PatternsView` lights up days the user engaged. The data doesn't punish gaps — it celebrates showing up.
+- App is now both reactive and proactive. `before food.` adds preventive practice (hunger check + pre-meal grounding) outside urge moments; Steady leads to optional voice notes; sensory swaps doubled.
+- Atmosphere is alive. Two slow-drifting bioluminescent jellyfish trace the screen perimeter; bioluminescent particles drift in their own currents and wrap around edges. The field reads as ocean.
 
 ## What's Not Working
 
@@ -239,7 +247,9 @@ Quell/
         │   ├── WordStone.swift
         │   ├── WrenLine.swift
         │   ├── SoftSlider.swift
-        │   └── ShakeDetector.swift
+        │   ├── ShakeDetector.swift
+        │   ├── BioluminescentField.swift
+        │   └── JellyfishField.swift
         ├── Screens/
         │   ├── PlaceholderHomeView.swift
         │   ├── StoneDestinationView.swift
@@ -265,7 +275,10 @@ Quell/
         │   ├── SettingsView.swift
         │   ├── CrisisResourcesView.swift
         │   ├── AboutView.swift
-        │   └── PatternsView.swift
+        │   ├── PatternsView.swift
+        │   ├── BeforeFoodView.swift
+        │   ├── HungerCheckView.swift
+        │   └── SteadyView.swift
         ├── Storage/
         │   ├── VoiceNoteStore.swift
         │   ├── SensorySwapStore.swift
