@@ -12,12 +12,21 @@ struct QuellApp: App {
 private struct RootView: View {
 
     @AppStorage("quell.hasOnboarded") private var hasOnboarded = false
+    @State private var splashDone = false
     @State private var disguised = false
 
     var body: some View {
         ZStack {
-            if hasOnboarded {
+            if !splashDone {
+                SplashView {
+                    withAnimation(.quellEaseSlow(duration: .quellDurMid)) {
+                        splashDone = true
+                    }
+                }
+                .transition(.opacity)
+            } else if hasOnboarded {
                 PlaceholderHomeView()
+                    .transition(.opacity)
             } else {
                 OnboardingView {
                     withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
@@ -41,6 +50,7 @@ private struct RootView: View {
                 .allowsHitTesting(false)
         }
         .animation(.quellEaseSlow(duration: .quellDurMid), value: hasOnboarded)
+        .animation(.quellEaseSlow(duration: .quellDurMid), value: splashDone)
         .onReceive(NotificationCenter.default.publisher(for: .deviceShaken)) { _ in
             guard !disguised else { return }
             withAnimation(.quellEaseGentle(duration: .quellDurFast)) {

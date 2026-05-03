@@ -9,9 +9,11 @@ enum WrenVoice {
 
     static let onboarding: [String] = [
         "hi.",
-        "i'm wren.",
-        "i'm here when the urge is loud,\nwhen the wave is rising,\nwhen you need a minute.",
-        "no fixing. just presence.",
+        "quell is for the loud moments —\nwhen the urge to eat is rising,\nwhen you're already in it,\nor you're after the wave.",
+        "you don't have to be alone with it.",
+        "i'm wren. i'll sit with you.\nno fixing. just presence.",
+        "we have breath.\nsmall movements.\nsensory things.\nnotes for future-you.",
+        "no calorie tracking.\nno streaks. no shame.",
         "if it gets too big,\n988 is always one tap away.",
         "ready when you are.",
     ]
