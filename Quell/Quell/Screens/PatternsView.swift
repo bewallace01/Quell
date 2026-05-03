@@ -73,18 +73,10 @@ struct PatternsView: View {
     }
 
     private var reflection: String {
-        let weekCount = store.thisWeek.count
-        let totalCount = store.events.count
-        if totalCount == 0 {
-            return "nothing here yet.\nthat's okay too."
-        }
-        if weekCount == 0 {
-            return "you've shown up before.\nbe here when you can."
-        }
-        if weekCount >= 5 {
-            return "you've been here a lot this week.\nthat counts."
-        }
-        return "you've been showing up.\nthat counts."
+        WrenVoice.patternsReflection(
+            thisWeekCount: store.thisWeek.count,
+            totalCount: store.events.count
+        )
     }
 }
 

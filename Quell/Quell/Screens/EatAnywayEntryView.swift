@@ -14,7 +14,7 @@ struct EatAnywayEntryView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: .quellSpace8) {
-                Text("sounds good.\nwant to slow it down?")
+                Text(WrenVoice.eatAnywayEntryPrompt)
                     .font(.quellDisplay)
                     .foregroundStyle(Color.quellCream)
                     .multilineTextAlignment(.center)

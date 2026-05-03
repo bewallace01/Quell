@@ -22,7 +22,7 @@ struct WaveCheckView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: .quellSpace7) {
-                Text("where is it now?")
+                Text(WrenVoice.waveCheckPrompt)
                     .font(.quellTitle)
                     .foregroundStyle(Color.quellCream)
                     .opacity(promptVisible ? 1 : 0)
@@ -92,14 +92,7 @@ struct WaveCheckView: View {
     }
 
     private func line(for result: WaveResult) -> String {
-        switch result {
-        case .bigger:
-            return "okay. we can get more help."
-        case .same:
-            return "let's try something else."
-        case .smaller:
-            return "you're still here. nice work staying."
-        }
+        WrenVoice.waveResultLine(result)
     }
 
     private func kindFor(_ result: WaveResult) -> String {

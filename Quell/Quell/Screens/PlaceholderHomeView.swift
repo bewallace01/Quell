@@ -84,11 +84,11 @@ struct PlaceholderHomeView: View {
                         )
                     case .eatMindful:
                         MindfulEatView {
-                            route(to: .closingLine("still here."))
+                            route(to: .closingLine(WrenVoice.closingStillHere))
                         }
                     case .eatJust:
                         JustEatView {
-                            route(to: .closingLine("still here."))
+                            route(to: .closingLine(WrenVoice.closingStillHere))
                         }
                     case .closingLine(let line):
                         ClosingLineView(line: line, onComplete: dismiss)
@@ -110,26 +110,12 @@ struct PlaceholderHomeView: View {
                         SensorySwapsView(category: cat, onDismiss: dismiss)
                     case .wobbling:
                         BreathingMomentView(
-                            phrases: [
-                                "the day's a little off.",
-                                "you don't have to fix it.",
-                                "still here with you.",
-                                "no big deal.",
-                                "let your shoulders drop.",
-                                "okay. just be here.",
-                            ],
+                            phrases: WrenVoice.wobbling,
                             onComplete: dismiss
                         )
                     case .needCompany:
                         BreathingMomentView(
-                            phrases: [
-                                "you're not alone in this minute.",
-                                "i'm here.",
-                                "want to text someone you trust?",
-                                "or just sit with me.",
-                                "no need to perform.",
-                                "still here.",
-                            ],
+                            phrases: WrenVoice.needCompany,
                             onComplete: dismiss,
                             extra: ("text someone", openMessages)
                         )
@@ -197,7 +183,7 @@ struct PlaceholderHomeView: View {
         let dest: Destination
         switch word {
         case "In it": dest = .coRegulation
-        case "Steady": dest = .closingLine("good. nice to see you.")
+        case "Steady": dest = .closingLine(WrenVoice.closingSteady)
         case "Wobbling": dest = .wobbling
         case "Need company": dest = .needCompany
         default: dest = .stone(word)
@@ -278,7 +264,7 @@ struct PlaceholderHomeView: View {
         withAnimation(.quellEaseSlow(duration: .quellDurSlow)) {
             switch result {
             case .smaller:
-                destination = .closingLine("thanks for showing up.")
+                destination = .closingLine(WrenVoice.closingThanks)
             case .same:
                 destination = .fork
             case .bigger:

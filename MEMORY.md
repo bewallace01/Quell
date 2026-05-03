@@ -12,17 +12,15 @@ Slice 2.1 (60-second co-regulation screen) shipped — "In it" now routes to the
 
 ## Last Session Summary
 
-Closed Phase 8 (Pattern Detective lean version) + Phase 10.1 (engagement heat map) in one push. App now collects local-only logs and surfaces them as a calendar grid with a single Wren reflection.
+Closed Slice 3.1 (WrenVoice centralization). Pure refactor, zero behavior change. New `DesignSystem/WrenVoice.swift` consolidates Wren's iterated voice content into one file: onboarding lines, co-regulation phrases, six mood protocol phrase sets, wobbling + needCompany phrase sets, mindful eat guidance, eat-anyway prompts, just-eat notification copy, wave check prompts + result lines, three closing line variants, and the patterns reflection function. Eight views now read from it instead of having phrases inline. The principle is documented at the top of the file: friend-on-the-floor, not calm-presenter, plainspoken, no therapy-stock affirmations, fewer "i" frames.
 
-`LogStore` (UserDefaults, JSON-encoded, 365-day retention) records `LogEvent { timestamp, kind }` from three terminal hooks: Wave Check completion (`wave-bigger/same/smaller`), `ClosingLineView.onAppear` (`close`), `BreathingMomentView` "okay" (`soft-presence`). Richer kinds (mood, tool, trigger) deferred — current data is enough for v1 heat map + engagement reflection.
-
-`PatternsView` (Settings → "your patterns" → "showing up") shows a 5-week × 7-day calendar grid: engaged days light up with `quellGlow` + a glow shadow, gaps stay dim `quellShade`, future cells dimmer. Above the grid: a single Wren-voiced reflection line that scales with this-week engagement count ("nothing here yet. that's okay too." / "you've been showing up. that counts." / "you've been here a lot this week."). No numbers, no streaks, no shaming. Cluster detection ("urges cluster Mon evenings") deferred until richer kind tags land.
+Skipped centralizing single-word UI prompts ("what is it?", "where is it now?"), section titles, About paragraphs (separate philosophy concern), Boring Meeting list (unique format), and pure interface text ("nothing saved yet."). They stay inline.
 
 ## Active Slice
 
 The current vertical slice we are building. We do not start a new slice until this one is checkpointed and feels right.
 
-**Open: pick next direction.** App is feature-complete for v1. Remaining code-side work: Phase 3.1 WrenVoice centralization (move all hardcoded phrase arrays into a single file by context — refactor, no behavior change); polish/flow validation (walk every screen, fix rough edges); Phase 11.3 notification copy unification (only one notification exists today). Outside-of-code: NEDA verified number, clinical advisor credit, app icon design, Apple Developer enrollment + TestFlight, App Store listing + privacy policy + screenshots.
+**Open: pick next direction.** App is feature-complete and the iterated voice content is now centralized. Remaining code-side: polish/flow validation (walk every screen with fresh eyes, fix rough edges, accessibility / VoiceOver labels). Outside-of-code: NEDA verified number, clinical advisor credit, app icon design, Apple Developer enrollment + TestFlight, App Store listing + privacy policy + screenshots.
 
 ## Where We Left Off
 
@@ -86,6 +84,13 @@ Not on the phone yet. First gut check happens at end of Phase 0.
 ## Recent Decisions
 
 Most recent first. Move to the brief's Decisions Log when stable.
+
+**Slice 3.1 (WrenVoice centralization):**
+
+- **`DesignSystem/WrenVoice.swift` is the single source of truth for Wren's iterated voice content.** When tuning phrases (cheesy → friend-on-the-floor type revisions), edit there; views just read. Voice principle is documented at the top of the file as a comment.
+- **Categorization by context, not by tone.** Sections are "Co-regulation," "Mood protocols," "Eat Anyway," "Wave Check," "Closing lines," etc. — each maps to where the user encounters the phrases.
+- **Mood protocol phrase resolution via `WrenVoice.phrases(for: MoodChoice)`** — single function, exhaustive switch. Pattern reusable for any future "content varies by enum case" need.
+- **Skipped centralizing single-word UI prompts and section titles.** They're not iterated; centralizing them adds plumbing without payoff. WrenVoice holds the things Bailey actually edits.
 
 **Phase 8 + 10.1 (Patterns / heat map):**
 
@@ -227,7 +232,8 @@ Quell/
         │   ├── QuellTypography.swift
         │   ├── QuellSpacing.swift
         │   ├── QuellMotion.swift
-        │   └── TokenPreview.swift
+        │   ├── TokenPreview.swift
+        │   └── WrenVoice.swift
         ├── Components/
         │   ├── BreathingShape.swift
         │   ├── WordStone.swift

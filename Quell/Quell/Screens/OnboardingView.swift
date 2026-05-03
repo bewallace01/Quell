@@ -7,14 +7,7 @@ struct OnboardingView: View {
     @State private var step = 0
     @State private var visible = false
 
-    private let lines = [
-        "hi.",
-        "i'm wren.",
-        "i'm here when the urge is loud,\nwhen the wave is rising,\nwhen you need a minute.",
-        "no fixing. just presence.",
-        "if it gets too big,\n988 is always one tap away.",
-        "ready when you are.",
-    ]
+    private let lines = WrenVoice.onboarding
 
     var body: some View {
         ZStack {

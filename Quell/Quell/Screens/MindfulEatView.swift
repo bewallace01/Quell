@@ -11,12 +11,7 @@ struct MindfulEatView: View {
     @State private var ambientVisible = false
     @State private var timerTask: Task<Void, Never>? = nil
 
-    private let lines = [
-        "take it somewhere you can sit.",
-        "phone face-down.",
-        "eyes on the food.",
-        "first three bites — just notice.",
-    ]
+    private let lines = WrenVoice.mindfulGuidance
 
     var body: some View {
         ZStack {

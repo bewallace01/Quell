@@ -16,7 +16,7 @@ struct JustEatView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: .quellSpace8) {
-                Text("i'm here when you're ready.\nno pressure.")
+                Text(WrenVoice.justEatPrompt)
                     .font(.quellTitle)
                     .foregroundStyle(Color.quellCream)
                     .multilineTextAlignment(.center)
@@ -49,8 +49,8 @@ struct JustEatView: View {
         guard granted else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "checking back."
-        content.body = "still here when you want me."
+        content.title = WrenVoice.justEatNotificationTitle
+        content.body = WrenVoice.justEatNotificationBody
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 20 * 60, repeats: false)
         let request = UNNotificationRequest(

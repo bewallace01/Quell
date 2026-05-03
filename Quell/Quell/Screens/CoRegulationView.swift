@@ -19,18 +19,8 @@ struct CoRegulationView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: .quellSpace8) {
-                WrenLine(
-                    phrases: [
-                        "still here.",
-                        "yeah, this is hard.",
-                        "no rush.",
-                        "we can wait.",
-                        "it'll pass. it always does.",
-                        "just this.",
-                    ],
-                    interval: .seconds(22)
-                )
-                .opacity(promptVisible ? 1 : 0)
+                WrenLine(phrases: WrenVoice.coRegulation, interval: .seconds(22))
+                    .opacity(promptVisible ? 1 : 0)
 
                 BreathingShape(size: 280)
                     .opacity(orbVisible ? 1 : 0)

@@ -186,9 +186,9 @@
 
 ### Slice 3.1: Voice and copy system
 
-- [ ] Create `WrenVoice.swift` — a centralized place for all of Wren's lines
-- [ ] Categorize lines by context (greeting, co-regulation, debrief, encouragement, escalation)
-- [ ] Implement a system to surface the right line at the right time without repetition
+- [x] `DesignSystem/WrenVoice.swift` centralizes Wren's iterated voice content. Sections: onboarding, co-regulation, six mood protocol phrase sets (via `phrases(for: MoodChoice)`), wobbling, needCompany, mindfulGuidance, eatAnywayEntryPrompt, justEatPrompt, justEatNotification (title/body), waveCheckPrompt, waveResultLine(_ result: WaveResult), closing line variants (closingThanks / closingStillHere / closingSteady), patternsReflection(thisWeekCount:totalCount:).
+- [x] Categorized by context. Eight views read from it: OnboardingView, CoRegulationView, MoodProtocolView, EatAnywayEntryView, MindfulEatView, JustEatView, WaveCheckView, PlaceholderHomeView (closing lines + soft-presence phrases), PatternsView.
+- [ ] Surface-the-right-line-without-repetition logic — deferred. Phrases currently rotate via `WrenLine` round-robin. No anti-repetition state. If Bailey wants weighted rotation or recent-suppression, that's a future enhancement.
 
 ### Slice 3.2: Wren's presence design
 
