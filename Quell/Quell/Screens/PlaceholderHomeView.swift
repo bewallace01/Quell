@@ -30,6 +30,8 @@ struct PlaceholderHomeView: View {
         case hungerCheck
         case preMeal
         case steady
+        case movementLibrary
+        case exercise(Exercise)
     }
 
     @State private var orbVisible = false
@@ -143,6 +145,15 @@ struct PlaceholderHomeView: View {
                             onLeaveNote: { route(to: .voiceRecord) },
                             onDismiss: dismiss
                         )
+                    case .movementLibrary:
+                        MovementLibraryView(
+                            onSelect: { exercise in route(to: .exercise(exercise)) },
+                            onDismiss: dismiss
+                        )
+                    case .exercise(let exercise):
+                        ExerciseView(exercise: exercise) {
+                            route(to: .movementLibrary)
+                        }
                     }
                 }
                 .transition(.opacity)
@@ -186,11 +197,16 @@ struct PlaceholderHomeView: View {
                 .padding(.horizontal, .quellSpace7)
                 .opacity(stonesVisible ? 1 : 0)
 
-                HStack(spacing: .quellSpace4) {
-                    homeLink("future-you.") { route(to: .voiceNotes) }
-                    homeLink("before food.") { route(to: .beforeFood) }
-                    homeLink("in a meeting.") { route(to: .boringMeeting) }
-                    homeLink("settings.") { route(to: .settings) }
+                VStack(spacing: .quellSpace2) {
+                    HStack(spacing: .quellSpace4) {
+                        homeLink("future-you.") { route(to: .voiceNotes) }
+                        homeLink("before food.") { route(to: .beforeFood) }
+                        homeLink("move.") { route(to: .movementLibrary) }
+                    }
+                    HStack(spacing: .quellSpace4) {
+                        homeLink("in a meeting.") { route(to: .boringMeeting) }
+                        homeLink("settings.") { route(to: .settings) }
+                    }
                 }
                 .opacity(stonesVisible ? 1 : 0)
             }

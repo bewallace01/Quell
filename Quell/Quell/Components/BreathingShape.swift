@@ -6,7 +6,14 @@ struct BreathingShape: View {
     /// and the orb scales within it.
     var size: CGFloat = 200
 
+    @AppStorage("quell.manualBreath") private var manualBreath = false
     @State private var inhaled = false
+    @State private var manualHolding = false
+    @State private var task: Task<Void, Never>? = nil
+
+    private var expanded: Bool {
+        manualBreath ? manualHolding : inhaled
+    }
 
     var body: some View {
         Circle()
@@ -25,21 +32,50 @@ struct BreathingShape: View {
             )
             .frame(width: size, height: size)
             .blur(radius: 6)
-            .scaleEffect(inhaled ? 1.05 : 0.72)
-            .opacity(inhaled ? 0.95 : 0.5)
-            .task {
-                while !Task.isCancelled {
-                    withAnimation(.quellEaseGentle(duration: .quellDurBreath)) {
-                        inhaled = true
+            .scaleEffect(expanded ? 1.05 : 0.72)
+            .opacity(expanded ? 0.95 : 0.5)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        guard manualBreath else { return }
+                        if !manualHolding {
+                            withAnimation(.quellEaseGentle(duration: .quellDurBreath)) {
+                                manualHolding = true
+                            }
+                        }
                     }
-                    try? await Task.sleep(for: .seconds(Double.quellDurBreath + 0.4))
+                    .onEnded { _ in
+                        guard manualBreath else { return }
+                        withAnimation(.quellEaseGentle(duration: .quellDurExhale)) {
+                            manualHolding = false
+                        }
+                    }
+            )
+            .accessibilityLabel(manualBreath
+                ? "breath orb. tap and hold to inhale, release to exhale."
+                : "breath orb")
+            .onAppear { startCycleIfNeeded() }
+            .onDisappear { task?.cancel() }
+            .onChange(of: manualBreath) { _, _ in startCycleIfNeeded() }
+    }
 
-                    withAnimation(.quellEaseGentle(duration: .quellDurExhale)) {
-                        inhaled = false
-                    }
-                    try? await Task.sleep(for: .seconds(Double.quellDurExhale + 1.2))
+    private func startCycleIfNeeded() {
+        task?.cancel()
+        guard !manualBreath else { return }
+        task = Task { @MainActor in
+            while !Task.isCancelled {
+                withAnimation(.quellEaseGentle(duration: .quellDurBreath)) {
+                    inhaled = true
                 }
+                try? await Task.sleep(for: .seconds(Double.quellDurBreath + 0.4))
+                if Task.isCancelled { return }
+                withAnimation(.quellEaseGentle(duration: .quellDurExhale)) {
+                    inhaled = false
+                }
+                try? await Task.sleep(for: .seconds(Double.quellDurExhale + 1.2))
             }
+        }
     }
 }
 

@@ -10,6 +10,7 @@ struct SettingsView: View {
 
     @AppStorage("quell.audioEnabled") private var audioEnabled = true
     @AppStorage("quell.hapticEnabled") private var hapticEnabled = true
+    @AppStorage("quell.manualBreath") private var manualBreath = false
     @AppStorage("quell.hasOnboarded") private var hasOnboarded = true
 
     @Environment(\.openURL) private var openURL
@@ -38,6 +39,8 @@ struct SettingsView: View {
                         toggleRow("haptic", isOn: $hapticEnabled)
                         Divider().background(Color.quellWhisper.opacity(0.3))
                         toggleRow("audio", isOn: $audioEnabled)
+                        Divider().background(Color.quellWhisper.opacity(0.3))
+                        toggleRow("manual breath", isOn: $manualBreath)
                     }
 
                     sectionGroup(title: "system") {
